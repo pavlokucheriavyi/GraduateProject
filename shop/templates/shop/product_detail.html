@@ -1,0 +1,32 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+      <div class="row">
+        <div class="col-md-8">
+        <div class="search-form">
+        </div>
+
+        <div class="alert alert-light">
+   <img class="shopimg" src="/{{ item.image }}">
+    <div class="valik">
+        <p class="otstup"><h3>{{ item.title }}</h3></p>
+        <hr style="width: 550px">
+        <p class="otstup">{{ item.description }}</p>
+
+       <h3><p class="otstup price"> {{ item.price }}.00 грн<input type="Submit" class="btn btn-outline-success to_cart" name="submit" value="Додати до корзини"/></p></h3>
+
+        </div>
+        </div>
+
+
+
+        </div>
+
+          <div class="col-md-4">
+
+          </div>
+      </div>
+</div>
+
+{% endblock %}
