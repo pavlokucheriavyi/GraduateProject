@@ -1,22 +1,28 @@
 {% extends "shop/base.html" %}
 {% load static %}
 {% block content %}
+    {% if messages %}
+        {% for mess in messages %}
+                <div class="alert alert-success my_success" role="alert">{{mess}}</div>
+        {% endfor %}
+    {% endif %}
 <div class="container mt-5">
       <div class="row">
         <div class="col-md-8">
         <div class="search-form">
-            <form action="" method="POST">
+            <form action="" method="POST" id="SearchForm">
                 {% csrf_token %}
-                {{ form }}
+                {{ form.search }}
                 <input type="Submit" class="btn btn-outline-warning search-button" name="submit" value="Пошук"/>
             </form>
         </div>
 <div class="shop_wrapper">
+<p class="Loader">Завантаження...</p>
 {% for item in products_list %}
    <div class="shop_link"><a class="shop_url" href="{% url 'product_detail' item.id %}"><img class="shopimg" src="/{{ item.image }}"><p class="otstup">{{ item.title }}</p></a>
 
        <p class="otstup"> Ціна: {{ item.price }} грн</p>
-    <a href="{% url 'product_detail' item.id %}"><img src="{% static '/final_cart_icon.png' %}" class="w-100 icon_cart" alt="..."></a>
+    <a href="{% url 'product_detail' item.id %}"><img src="{% static 'shop/final_cart_icon.png' %}" class="w-100 icon_cart" alt="..."></a>
    </div>
 
 {% endfor %}
@@ -44,20 +50,17 @@
 
           <div class="col-md-4">
           <div class="categories">
-          <form action="" method="post" class="filters">
+          <form id="CartForm" action="" method="post" class="filters">
             {% csrf_token %}
           <h3 style="text-align: center">Категорії</h3>
           <hr>
               <ul>
                 <li>
-                    <a href="{% url 'shop' %}">
-            <button type="Submit" name="category" value="Масло" class="btn btn-link mylink">Масло</button>
-                    </a>
+            <button id="vitya" type="Submit" name="category" value="Масло" class="btn btn-link mylink">Масло</button>
                 </li>
                 <li>
-                    <a href="{% url 'shop' %}">
             <button type="Submit" name="category" value="Гвозди" class="btn btn-link mylink">Гвозди</button>
-                    </a>
+
                 </li>
                 <li>
                     <a href="{% url 'shop' %}">
@@ -74,13 +77,56 @@
             <button type="Submit" name="category" value="Подшипники" class="btn btn-link mylink">Подшипники</button>
                     </a>
              </li>
-
-
               </ul>
           </form>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+           $(".Loader").hide()
+           const form =  document.querySelector('#CartForm');
+           const valueButtons = form.querySelectorAll('button');
+
+           valueButtons.forEach(button => {
+              button.addEventListener('click', (e) => {
+                  e.preventDefault();
+
+                  $.ajax({
+                   data: {'cat': button.value, 'csrfmiddlewaretoken':$('[name=csrfmiddlewaretoken]').val(), 'click': 'click'},
+                   type: 'POST',
+                   url: "/filter-data",
+                   beforeSend: function (){
+                       $(".Loader").show()
+                   },
+                   success: function(response){
+                       $(".shop_wrapper").html(response.data);
+                       $(".Loader").hide()
+                   }
+               });
+              });
+           });
+
+
+           $(document).ready(function () {
+           $('#SearchForm').submit(function () {
+               $.ajax({
+                   data: $(this).serialize(),
+                   type: $(this).attr('method'),
+                   url: "{% url 'shop' %}",
+                   beforeSend: function () {
+                       $(".Loader").show()
+                   },
+                   success: function(response) {
+                       $(".shop_wrapper").html(response.data);
+                   }
+               })
+               return false;
+           })
+           })
+
+    </script>
           </div>
           </div>
       </div>
 </div>
 
 {% endblock %}
+

@@ -1,4 +1,7 @@
 from django.db import models
+from django.urls import reverse
+from django.utils import timezone
+from decimal import Decimal
 
 
 class Category(models.Model):
@@ -14,11 +17,15 @@ class Category(models.Model):
 
 class Products(models.Model):
     title = models.CharField(max_length=200, unique=True)
-    price = models.IntegerField(default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.TextField(blank=True)
     count = models.IntegerField(default=0)
+    date = models.DateTimeField("Дата", default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='details_photo', default='static/fon.jpg')
+    image = models.ImageField(upload_to='details_photo', default='static/shop/fon.jpg')
+
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.title
@@ -27,3 +34,15 @@ class Products(models.Model):
         verbose_name = 'Product'
         verbose_name_plural = 'Products'
 
+
+class AvailableMarks(models.Model):
+    name = models.CharField(max_length=200, blank=True)
+    is_available = models.BooleanField()
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Available Mark'
+        verbose_name_plural = 'Available Marks'
+        ordering = ['name']

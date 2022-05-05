@@ -1,6 +1,15 @@
 {% extends "shop/base.html" %}
 {% load static %}
 {% block content %}
+{% if messages %}
+    {% for mess in messages %}
+        {% if mess.tags == "error" %}
+            <div class="alert alert-danger my_success" role="alert">{{mess}}</div>
+        {% else %}
+            <div class="alert alert-success my_success" role="alert">{{mess}}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
 <div class="content">
 <h1 class="val">СТО "КОЛІЩА"</h1>
 <div class="two-blocks">
@@ -11,19 +20,19 @@
 <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active" data-bs-interval="3000">
-      <img src="{% static '/slider_5.jpg' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'shop/slider_5.jpg' %}" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item" data-bs-interval="3000">
-      <img src="{% static '/slider_9.jpg' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'shop/slider_9.jpg' %}" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item" data-bs-interval="3000">
-      <img src="{% static '/slider_10.jpg' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'shop/slider_10.jpg' %}" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item" data-bs-interval="3000">
-      <img src="{% static '/slider_6.jpg' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'shop/slider_6.jpg' %}" class="d-block w-100" alt="...">
     </div>
     <div class="carousel-item" data-bs-interval="3000">
-      <img src="{% static '/slider_2.jpg' %}" class="d-block w-100" alt="...">
+      <img src="{% static 'shop/slider_2.jpg' %}" class="d-block w-100" alt="...">
     </div>
 
 
@@ -78,12 +87,13 @@
 </style>
 
 <div class="wrapper">
-   <a class="link" href="{url 'detail'}"><div><img src="{% static '/shinomontazh.png' %}" class="w-100 icon" alt="..."><p>Шиномонтаж</p></div></a>
-    <a class="link" href="{url 'detail'}"><div><img src="{% static '/kuzovnoi.png' %}" class="w-100 icon" alt="..."><p>Кузовний ремонт</p></div></a>
-    <a class="link" href="{url 'detail'}"><div><img src="{% static '/hodovaya.png' %}" class="w-100 icon" alt="..."><p>Ремонт ходової</p></div></a>
-    <a class="link" href="{url 'detail'}"><div><img src="{% static '/pokraska.png' %}" class="w-100 icon" alt="..."><p>Покраска</p></div></a>
-    <a class="link" href="{url 'detail'}"><div><img src="{% static '/tormozna.png' %}" class="w-100 icon" alt="..."><p>Ремонт тормозної системи</p></div></a>
-    <a class="link" href="{url 'detail'}"><div><img src="{% static '/diagnostikato.png' %}" class="w-100 icon" alt="..."><p>Диагностика та ТО</p></div></a>
+   <a class="link" href="{% url 'repair_page' type_name='Шиномонтаж' %}"><div><img src="{% static 'shop/shinomontazh.png' %}" class="w-100 icon" alt="..."><p>Шиномонтаж</p></div></a>
+    <a class="link" href="{% url 'repair_page' type_name='Кузовний ремонт' %}"><div><img src="{% static 'shop/kuzovnoi.png' %}" class="w-100 icon" alt="..."><p>Кузовний ремонт</p></div></a>
+    <a class="link" href="{% url 'repair_page' type_name='Ремонт ходової' %}"><div><img src="{% static 'shop/hodovaya.png' %}" class="w-100 icon" alt="..."><p>Ремонт ходової</p></div></a>
+    <a class="link" href="{% url 'repair_page' type_name='Покраска' %}"><div><img src="{% static 'shop/pokraska.png' %}" class="w-100 icon" alt="..."><p>Покраска</p></div></a>
+    <a class="link" href="{% url 'repair_page' type_name='Ремонт тормозної системи' %}"><div><img src="{% static 'shop/tormozna.png' %}" class="w-100 icon" alt="..."><p>Ремонт тормозної системи</p></div></a>
+    <a class="link" href="{% url 'repair_page' type_name='Диагностика та ТО' %}"><div><img src="{% static 'shop/diagnostikato.png' %}" class="w-100 icon" alt="..."><p>Диагностика та ТО</p></div></a>
 </div>
 </div>
 {% endblock %}
+

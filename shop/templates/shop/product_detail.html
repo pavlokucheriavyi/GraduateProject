@@ -8,13 +8,31 @@
         </div>
 
         <div class="alert alert-light">
+    {% for item in result_list %}
    <img class="shopimg" src="/{{ item.image }}">
     <div class="valik">
         <p class="otstup"><h3>{{ item.title }}</h3></p>
         <hr style="width: 550px">
         <p class="otstup">{{ item.description }}</p>
 
-       <h3><p class="otstup price"> {{ item.price }}.00 грн<input type="Submit" class="btn btn-outline-success to_cart" name="submit" value="Додати до корзини"/></p></h3>
+       <form method="post" class="otstup price" id="InToCart">
+            <h3>{{ item.price }} грн</h3>
+            <div class="valik2">
+            <h6>Кількість: {{ form.quantity }}</h6>
+            <input type="submit" class="btn btn-outline-success" name="submit" value="Додати до корзини"/>
+            </div>
+            {% csrf_token %}
+        </form>
+
+
+        {% if user.is_superuser %}
+            <p class="otstup">В наявності: {{ item.count }} шт</p>
+            <p><a href="{% url 'update_product' item.id %}" class="btn btn-outline-info">Редагувати данні</a>
+        {% endif %}
+        {% if user.is_superuser %}
+            <a href="{% url 'delete_product' item.id %}" class="btn btn-outline-danger delete_button">Видалити продукт</a>
+        {% endif %}</p>
+
 
         </div>
         </div>
@@ -28,5 +46,34 @@
           </div>
       </div>
 </div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("#InToCart").submit(function (){
+                    $.ajax({
+                        data: $(this).serialize(),
+                        type: $(this).attr('method'),
+                        url: "{% url 'cart:cart_add' item.id %}",
+                        success: function () {
+                            $(".cart_message").load(" .cart_message");
+                            swal({
+                                  title: "Товар доданий до корзини!",
+                                  icon: "success",
+                                  buttons: {cancel: 'До магазину',
+                                    confirm: "В корзину"},
+                            }).then((value) => {
+                                 if (value === null) {
+                                  window.location.assign('{% url 'shop' %}');
+                                     }
+                                  else {
+                                      window.location.assign('{% url 'cart:cart_detail' %}');
+                                 }
+                                  });
+                        }
+                    });
+                return false;
+                });
+            })
+        </script>
+{% endfor %}
 {% endblock %}

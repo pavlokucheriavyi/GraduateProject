@@ -18,17 +18,22 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.contrib.auth import views
+from django.contrib.auth import views as vws
 from users.forms import CustomAuthForm
 from django.contrib.auth import views as auth_views
+from users import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('cart/', include('cart.urls', namespace='cart')),
     path('', include('shop.urls')),
-    path('user', auth_views.LoginView.as_view(template_name='users/user.html', authentication_form=CustomAuthForm, next_page='/'), name='user'),
-    path('exit', views.LogoutView.as_view(template_name='users/exit.html'), name='exit')
+    path('api/', include('marks_api.urls')),
+    path('logIn/', views.login, name='login'),
+    path('registration/', views.registration, name='registration'),
+    path('exit', vws.LogoutView.as_view(template_name='users/exit.html'), name='exit')
 
 ]
 
 urlpatterns += staticfiles_urlpatterns()
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

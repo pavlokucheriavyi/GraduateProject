@@ -7,6 +7,11 @@ main {
 
 }
 
+.my_success {
+    margin-left: 166px !important;
+    margin-right: 166px !important;
+    margin-top: 46px;
+}
 
 .navbar {
     position: fixed;
@@ -120,7 +125,7 @@ h1 {
   grid-gap: 1em;
   grid-auto-rows: 150px;
   grid-auto-rows: minmax(100px, auto);
-  background-image: url(/static/fon.jpg);
+  background-image: url(fon.jpg);
   margin: 20px auto;
   padding: 35px;
 }
@@ -156,6 +161,144 @@ h1 {
 
 }
 
+.delete_button {
+    margin-left: 225px;
+}
+
+.otmena {
+    margin-left: 10px;
+}
+
+.submit_delete {
+    margin-bottom: 550px;
+}
+
+.repair_input {
+    margin-left: 15px;
+    width: 400px;
+    font-family: inherit; /* 1 */
+    font-size: inherit; /* 1 */
+    line-height: inherit; /* 1 */
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+}
+
+.repair_butt {
+    float: left;
+    margin-top: 20px;
+    margin-bottom: 300px;
+}
+
+.wrapper_repair{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-gap: 1em;
+      grid-auto-rows: 150px;
+      grid-auto-rows: minmax(100px, auto);
+      margin-top: 20px;
+      padding: 35px;
+}
+
+.title_sto {
+    display: block;
+    text-align: center;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+}
+
+.repair_icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80px !important;
+    height: 80px !important;
+}
+
+.image {
+    position: relative;
+    padding: 18px;
+}
+
+.text_over {
+    position: absolute;
+    top: -20px;
+    left: 60px;
+    width: 50%;
+}
+
+.text_over span {
+    color: grey;
+    font-size: 40px;
+    line-height: 55px;
+    padding: 10px;
+}
+
+.krug_bel {
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    width: 10%;
+}
+
+.krug_bel span {
+    font-size: 17px;
+    line-height: 55px;
+}
+
+#map {
+    width: 100%;
+    height: 400px;
+}
+
+.page_title {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #F90B6D; font-family: 'Open Sans', sans-serif; font-size: 34px; font-weight: 300; line-height: 40px;
+    text-shadow: -1px 1px 0 #000;
+}
+
+.back_fon {
+    height: 432px;
+    margin-bottom: 100px;
+    background-image: url(feature.jpg);
+
+}
+
+.my_time_dict {
+    margin-top: 30px;
+}
+
+.my_dropdown {
+    margin-left: 15px;
+    width: 400px;
+    font-family: inherit; /* 1 */
+    font-size: inherit; /* 1 */
+    line-height: inherit; /* 1 */
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    background-color: white !important;
+}
+
+.repair_form {
+    clear:both;
+    text-align:right;
+}
+
+.repair_label {
+    float:left;
+    margin-top: 6px;
+    color: white;
+}
+
+.time_main {
+    float:left;
+    margin-left: 20px;
+}
+
 .search-button {
     margin-left: 15px;
     margin-bottom: 2px;
@@ -175,6 +318,13 @@ h1 {
     border: 1px solid #bdbdbd;
     border-radius: 0.25rem;
 
+}
+.form_input_cart {
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    font-family: inherit; /* 1 */
+    font-size: inherit; /* 1 */
+    line-height: inherit; /* 1 */
 }
 
 .paginbutt {
@@ -252,6 +402,167 @@ h1 {
   height: auto;
 }
 
+.valik2{
+    display: flex;
+
+    align-items: center;
+}
+
+.valik2 h6{
+    margin-right: 20px;
+}
+
+/*.carousel-control-prev,*/
+/*.carousel-control-next {*/
+/*    position: relative;*/
+
+/*    }*/
+
+.carousel-control-prev:after,
+.carousel-control-next:after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 40px;
+    width: 40px;
+    background-color: black;
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.carousel-control-next-icon,
+.carousel-control-prev-icon{
+    z-index: 2;
+}
+
+.ui-menu{
+    max-height: 300px;
+    overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: whitesmoke;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ffa940;
+}
+
+.my_cart {
+    border: 2px solid darkgrey;
+    border-collapse: collapse;
+    width: 70%;
+    align-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+}
+
+td {
+    vertical-align: middle;
+}
+
+.badge {
+  padding-left: 9px;
+  padding-right: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+#lblCartCount {
+    font-size: 12px;
+    background: #ff0000;
+    color: #fff;
+    padding: 0 5px;
+    vertical-align: top;
+    margin-left: -10px;
+}
+
+.timals{
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 15px;
+}
+
+.update_form button {
+    outline: none;
+    border: 0;
+    background-color: transparent;
+}
+
+.update_form svg {
+    width: 25px;
+}
+
+.update_form svg path {
+    fill: green;
+}
+
+.navbar-nav {
+    width: 100%;
+}
+
+.shapka_butt{
+    margin: 0 15px;
+}
+
+.cart_message{
+    position: relative;
+}
+
+#id_title,
+#id_count,
+#id_price,
+#id_description,
+#id_category {
+    font-family: inherit; /* 1 */
+    font-size: inherit; /* 1 */
+    line-height: inherit; /* 1 */
+    margin: 0; /* 2 */
+    padding: 0.1rem 0.1rem;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    background-color: white;
+}
+
+#id_image{
+    padding: 10px;
+}
+
+#id_quantity{
+    font-family: inherit; /* 1 */
+    font-size: inherit; /* 1 */
+    line-height: inherit; /* 1 */
+    margin: 0; /* 2 */
+    padding: 0.1rem 0.1rem;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    background-color: white;
+}
+
+.cart_shopimg {
+    display: block;
+    margin: 0 auto;
+    aspect-ratio: 1 / 1;
+  object-fit: cover;
+  width: 100%;
+  height: 100px;
+}
+
+.text-right{
+    margin-left: 228px;
+    margin-top: 25px;
+}
+
 .price {
     background-color: #f7f7f7;
     padding: 1rem;
@@ -259,6 +570,9 @@ h1 {
     /* Чёрная рамка */
     border-radius: 3px;
     margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
 
 }
@@ -366,8 +680,6 @@ span {
     margin-bottom: 400px;
 
 }
-
-
 
 .log_in_button {
     width: 273px;
