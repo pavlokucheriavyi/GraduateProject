@@ -1,0 +1,33 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+      <div class="row">
+        <div class="col-md-8">
+        <div class="search-form">
+        </div>
+
+        <div class="alert alert-light">
+            <form method="post" class="" enctype="multipart/form-data">
+                {% csrf_token %}
+                    <p><label style="margin-right: 10px;">Назва: </label>{{ form.title }}</p>
+                    <p><label style="margin-right: 10px;">Ціна: </label>{{ form.price }}</p>
+                    <p><label style="margin-right: 10px;">Опис товара: </label>{{ form.description }}</p>
+                    <p><label style="margin-right: 10px;">Кількість: </label>{{ form.count }}</p>
+                    <p><label style="margin-right: 10px;">Категорія: </label>{{ form.category }}</p>
+                    <p><label style="margin-right: 10px;">Фото</label>{{ form.image }}</p>
+                <button class="btn btn-warning" type='submit'>Оновити</button>
+            </form>
+        </div>
+
+
+
+        </div>
+
+          <div class="col-md-4">
+
+          </div>
+      </div>
+</div>
+
+{% endblock %}
