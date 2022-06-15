@@ -83,7 +83,7 @@
         <td style="font-weight: bold; font-size: large;">Загальна сума</td>
         <td colspan="4">
             {% if flag == True %}
-                <div style="float: right; color: green;">-20% від суми товару</div>
+                <div style="float: right; color: green;">-20% від загальної суми замовлення</div>
             {% endif %}
         </td>
         <td class="num sum_total">{{ total_products_price }}</td>
@@ -280,6 +280,7 @@
     const productLayout2 = document.querySelector('.btn-warning');
     const productLayout3 = document.querySelector('.btn-success');
     const products = document.querySelectorAll('.product');
+
 
     for (let i = 0; i < products.length; i++) {
         products[i].querySelector('#cart_remove').addEventListener('click', () => {

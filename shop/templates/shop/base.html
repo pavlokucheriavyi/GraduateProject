@@ -75,10 +75,17 @@
 </main>
 
 {% if not user.is_authenticated %}
-<div style="width: 100%; border: 2px solid red; padding: 10px;">
-<a href="{% url 'registration' %}" style="display: block; text-align: center;">Зареєструйтеся та майте можливість відслілковувати статус вашого ремонту та
-    отримайте знижку на першу покупку запчастин 20%
-</a>
+    <div style="width: 100%; border: 2px solid red; padding: 10px;">
+        <a href="{% url 'registration' %}" style="display: block; text-align: center;">Зареєструйтеся та майте
+            можливість відслілковувати статус вашого ремонту та
+            отримайте знижку на першу покупку запчастин 20%
+        </a>
+    </div>
+{% elif user.is_authenticated and sections == 'New_user' %}
+    <div style="width: 100%; border: 2px solid red; padding: 10px;" class="discount">
+        <a href="{% url 'shop' %}" style="display: block; text-align: center;">
+            У вас діє знижка на одне замовлення товару 20%
+        </a>
     </div>
 {% endif %}
 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2595.882303597431!2d32.107372895492524!3d49.411131402348104!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d14b2fc93b744f%3A0x5b86ae3d3556aa84!2z0KHQotCeIMKr0JrQvtC70ZbRidCwwrs!5e0!3m2!1sru!2sua!4v1649248906130!5m2!1sru!2sua"
