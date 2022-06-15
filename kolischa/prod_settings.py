@@ -4,11 +4,11 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
+DEBUG = False
 
 CART_SESSION_ID = 'cart'
 
-ALLOWED_HOSTS = ['127.0.0.1', '134.209.251.106']
+ALLOWED_HOSTS = ['127.0.0.1', '134.209.251.106', 'mygraduateproject.herokuapp.com']
 
 DATABASES = {
     'default': {
