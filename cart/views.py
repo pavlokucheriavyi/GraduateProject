@@ -12,7 +12,6 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .forms import CartAddProductForm
 from .forms import CaptchaTestForm
-from scrapyd_api import ScrapydAPI
 
 
 @require_POST
