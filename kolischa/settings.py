@@ -29,7 +29,9 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'cart',
     'rest_framework',
-    'marks_api'
+    'marks_api',
+    'phonenumber_field',
+    'captcha'
 ]
 
 MIDDLEWARE = [

@@ -18,7 +18,7 @@
 <div class="style_form">
 <form method="post" class="user_in_form">
     {% csrf_token %}
-    <p>{{ form.username }}</p>
+    <p>{{ form.email }}</p>
     <p>{{ form.password }}</p>
 <p>Ви ще не зареєстровані?<a href="{% url 'registration' %}">Зареєструватись</a></p>
 <p>Забули пароль? <a href="#">Відновити</a></p>

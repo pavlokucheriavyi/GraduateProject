@@ -87,12 +87,9 @@
 </style>
 
 <div class="wrapper">
-   <a class="link" href="{% url 'repair_page' type_name='Шиномонтаж' %}"><div><img src="{% static 'shop/shinomontazh.png' %}" class="w-100 icon" alt="..."><p>Шиномонтаж</p></div></a>
-    <a class="link" href="{% url 'repair_page' type_name='Кузовний ремонт' %}"><div><img src="{% static 'shop/kuzovnoi.png' %}" class="w-100 icon" alt="..."><p>Кузовний ремонт</p></div></a>
-    <a class="link" href="{% url 'repair_page' type_name='Ремонт ходової' %}"><div><img src="{% static 'shop/hodovaya.png' %}" class="w-100 icon" alt="..."><p>Ремонт ходової</p></div></a>
-    <a class="link" href="{% url 'repair_page' type_name='Покраска' %}"><div><img src="{% static 'shop/pokraska.png' %}" class="w-100 icon" alt="..."><p>Покраска</p></div></a>
-    <a class="link" href="{% url 'repair_page' type_name='Ремонт тормозної системи' %}"><div><img src="{% static 'shop/tormozna.png' %}" class="w-100 icon" alt="..."><p>Ремонт тормозної системи</p></div></a>
-    <a class="link" href="{% url 'repair_page' type_name='Диагностика та ТО' %}"><div><img src="{% static 'shop/diagnostikato.png' %}" class="w-100 icon" alt="..."><p>Диагностика та ТО</p></div></a>
+    {% for i in AllTypesOfRepair %}
+        <a class="link" href="{% url 'repair_page' type_name=i.type %}"><div><img src="{{ i.icon }}" class="w-100 icon" alt="..."><p>{{ i.type }}</p></div></a>
+    {% endfor %}
 </div>
 </div>
 {% endblock %}

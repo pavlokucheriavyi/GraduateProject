@@ -16,13 +16,13 @@ class Category(models.Model):
 
 
 class Products(models.Model):
-    title = models.CharField(max_length=200, unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    description = models.TextField(blank=True)
-    count = models.IntegerField(default=0)
+    title = models.CharField("Назва", max_length=200, unique=True)
+    price = models.DecimalField("Ціна", max_digits=10, decimal_places=2, default=0)
+    description = models.TextField("Опис товару", blank=True)
+    count = models.IntegerField("Кількість товару в наявності", default=0)
     date = models.DateTimeField("Дата", default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='details_photo', default='static/shop/fon.jpg')
+    image = models.ImageField("Фото товару", upload_to='details_photo', default='static/shop/fon.jpg')
 
     def get_absolute_url(self):
         return reverse('product_detail', kwargs={'pk': self.pk})

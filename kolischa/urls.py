@@ -26,7 +26,9 @@ from users import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('cart/', include('cart.urls', namespace='cart')),
+    path('profile', include('users.urls', namespace='profile')),
     path('', include('shop.urls')),
+    path('captcha/', include('captcha.urls')),
     path('api/', include('marks_api.urls')),
     path('logIn/', views.login, name='login'),
     path('registration/', views.registration, name='registration'),

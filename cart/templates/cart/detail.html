@@ -1,104 +1,442 @@
 {% extends "shop/base.html" %}
 {% block content %}
-  {% if cart|length == 0 %}
-    <h1 style="margin-top: 10px;">Your Cart is empty</h1>
-  {% else %}
-  <table class="table table-hover table-bordered text-center my_cart">
-      <thead>
-        <tr>
-          <th>Зображення</th>
-          <th>Назва продукту</th>
-          <th>Кількість для оновлення</th>
-          <th>Кількість</th>
-          <th>Ціна за штуку, грн</th>
+{% if cart|length == 0 %}
+<h1 style="margin-top: 10px;">Your Cart is empty</h1>
+{% else %}
+<table class="table table-hover table-bordered text-center my_cart">
+    <thead>
+    <tr>
+        <th>Зображення</th>
+        <th>Назва продукту</th>
+        <th>Кількість для оновлення</th>
+        <th>Кількість</th>
+        <th>Ціна за штуку, грн</th>
 
-          <th>Сума, грн</th>
-            <th>Видалити продукт</th>
-        </tr>
-      </thead>
-      <tbody>
-      <div class="NewCart">
+        <th>Сума, грн</th>
+        <th>Видалити продукт</th>
+    </tr>
+    </thead>
+    <tbody>
+    <div class="NewCart">
         {% for item in cart %}
-          {% with product=item.product %}
-          {% load static %}
-            <tr
-                    class="product"
-                actionUrl="{% url 'cart:cart_remove' product.id %}"
-                actionUrl2="{% url 'cart:cart_add' product.id %}"
-            >
-              <td>
-                  <a href="{{ product.get_absolute_url }}">
-                      <img class="cart_shopimg" src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'shop/check.png' %}{% endif %}">
-                  </a>
-              </td>
-              <td>{{ product.title }}</td>
-              <td>
-                <form action="{% url 'cart:cart_add' product.id %}" method="post" class="update_form" id="update_form">
-                  {{ item.update_quantity_form.quantity }}
-                  <p>{{ item.update_quantity_form.update }}</p>
-                  <button type="submit" id="update_button">
-                      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 30 30" width="30px" height="30px">
-                      <path d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"/></svg>
-                  </button>
-                  {% csrf_token %}
-                </form>
-              </td>
-              <td>
-                  {{ item.quantity }}
-              </td>
-              <td class="num">{{ item.price }}</td>
-              <td class="num">{{ item.total_price }}</td>
-                <td><a style="text-decoration: none; font-size: small;" id="cart_remove" href="#">&#10060;</a></td>
-            </tr>
+            {% with product=item.product %}
+                {% load static %}
+                <tr
+                        class="product"
+                        actionUrl="{% url 'cart:cart_remove' product.id %}"
+                        actionUrl2="{% url 'cart:cart_add' product.id %}"
+
+                >
+                    <td>
+                        <a href="{{ product.get_absolute_url }}">
+                            <img class="cart_shopimg" src="
+
+
+                                    {% if product.image %}{{ product.image.url }}{% else %}{% static 'shop/check.png' %}{% endif %}">
+                        </a>
+                    </td>
+                    <td>{{ product.title }}</td>
+                    <td>
+                        <form method="post" class="update_form" id="update_form">
+                            {{ item.update_quantity_form.quantity }}
+                            <p>{{ item.update_quantity_form.update }}</p>
+                            <button id="update_button" class="update_item">
+                                <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30px"
+                                     height="30px">
+                                    <path d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"/>
+                                </svg>
+                            </button>
+                            {% csrf_token %}
+                        </form>
+                    </td>
+                    <td class="product_quantity">
+                        {{ item.quantity }}
+                    </td>
+                    <td class="num">{{ item.price }}</td>
+                    <td class="num product_sum">{{ item.total_price }}</td>
+                    <td><a style="text-decoration: none; font-size: small;" id="cart_remove" href="#">&#10060;</a></td>
+                </tr>
+                {#              <script>#}
+                {#                    $(document).ready(function () {#}
+                {#                               $('.update_form').submit(function () {#}
+                {#                                   $.ajax({#}
+                {#                                       data: $(this).serialize(),#}
+                {#                                       type: $(this).attr('method'),#}
+                {#                                       url: "{% url 'cart:cart_add' product.id %}"#}
+                {#                                       //success: function () {#}
+                {##}
+                {#                                       //}#}
+                {##}
+                {##}
+                {#                                   })#}
+                {#                                   ;#}
+                {#                                   return false;#}
+                {#                               });#}
+                {#                           })#}
+                {#              </script>#}
             {% endwith %}
-      {% endfor %}
 
-      </div>
-      <tr class="total">
+        {% endfor %}
+
+    </div>
+    <tr class="total">
         <td style="font-weight: bold; font-size: large;">Загальна сума</td>
-        <td colspan="4"></td>
-        <td class="num">{{ cart.get_total_price }}</td>
-      </tr>
-      </tbody>
-  </table>
-  <p class="text-right">
+        <td colspan="4">
+            {% if flag == True %}
+                <div style="float: right; color: green;">-20% від суми товару</div>
+            {% endif %}
+        </td>
+        <td class="num sum_total">{{ total_products_price }}</td>
+    </tr>
+    </tbody>
+</table>
+<p class="text-right">
     <a href="{% url 'shop' %}" style="text-decoration: none;">
-      <input type="submit" class="btn btn-warning" value="До магазину">
+        <input type="submit" class="btn btn-warning" value="До магазину">
     </a>
-    <a href="#" style="margin-left: 9px;">
-      <input type="submit" class="btn btn-success" style="margin-left: 10px;" value="Оформити заказ" onclick="/#/">
+    <a href="" style="margin-left: 9px;" data-bs-toggle="modal" data-bs-target="#ModalForm">
+        <input type="submit" class="btn btn-success" style="margin-left: 10px;" value="Оформити заказ" onclick="/#/">
     </a>
-  </p>
-    <script>
-              const mainLayout = document.querySelector('main');
-              const productLayout = document.querySelector('.table');
-              const productLayout2 = document.querySelector('.btn-warning');
-              const productLayout3 = document.querySelector('.btn-success');
-              const products = document.querySelectorAll('.product');
+</p>
+<div class="modal" tabindex="-1" role="dialog" id="ModalForm">q
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title my_m_title">Оформлення заказу</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" class="order_form" id="order_form" autocomplete="off">
+                <div class="modal-body">
+                    <h3>Оформити заказ</h3>
+                    <div class="bilet">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td class="delivery_select">
+                                    <p>
+                                        <input type="radio" id="delivery_radio_1" name="delivery_method_id" value="1"
+                                               checked="" onclick="newFunction()">
+                                    </p>
+                                </td>
+                                <td class="delivery_text">
+                                    <h5>Самовивіз з СТО КОЛІЩА</h5>
+                                    <p>Після оформлення замовлення, наш менеджер зателефонує та проінформує вас в який
+                                        термін можна забрати товар по адресі вказаній в розділі "Контакти"</p>
 
-              for (let i = 0; i < products.length; i++) {
-                  products[i].querySelector('#cart_remove').addEventListener('click', () => {
-                      $.ajax({
-                           type: 'POST',
-                           data: {'csrfmiddlewaretoken':$('[name=csrfmiddlewaretoken]').val()},
-                           url: products[i].getAttribute('actionUrl'),
-                           success: function(response){
-                                products[i].remove();
-                                console.log(productLayout2);
-                                if (response.data === "Vitya") {
-                                    productLayout.remove();
-                                    productLayout2.remove();
-                                    productLayout3.remove();
-                                    mainLayout.insertAdjacentHTML('afterbegin', "<h1 style='color: black; margin-top: 40px; margin-left: 40px;'> Your cart is empty </h1>");
-                                }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="delivery_select">
+                                    <p>
+                                        <input type="radio" id="delivery_radio_9" name="delivery_method_id" value="9"
+                                               onclick="myFunction()">
+                                    </p>
+                                </td>
+                                <td class="delivery_text" id="new_post">
+                                    <h5>Доставка "Нова Пошта"</h5>
+                                    <p>Зручний та швидкий спосіб доставки у великі міста України.
+                                    <p>Вартість доставки згідно з тарифами нової пошти. Якщо потрібна доставка до дверей
+                                        (додатково оплачує одержувач), вкажіть це в коментарях! </p>
+                                    <p style="color: red;">Увага! Зворотне пересилання замовлення здійснюється за
+                                        рахунок отримувача.</p> Докладніше про представництва Нової Пошти <a
+                                        href="https://novaposhta.ua/timetable">https://novaposhta.ua/timetable</a></p>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3>Оплата заказу</h3>
+                    <div class="bilet">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td class="delivery_select">
+                                    <p>
+                                        <input type="radio" id="delivery_radio_1" name="pay_method_id" value="1"
+                                               checked="" onclick="select_delivery_method(1);">
+                                    </p>
+                                </td>
+                                <td class="delivery_text">
+                                    <h5>Оплата готівкою або карткою</h5>
+                                    <p>Оплата готівкою або карткою</p>
+
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="overflow: hidden;">
+                        <h6 style="float: right">В сумі:<p class="total_cart_sum"
+                                                           style="margin-left: 5px; float: right; font-weight: bold;">{{ total_products_price }}
+                            грн</p></h6>
+
+                    </div>
+                    <div class="if_none">
+                        <p>
+                        <h3>Данні користувача</h3></p>
+                        <div class="bilet">
+                            <table class="order_form">
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        Прізвище, ім'я, по-батькові
+                                    </td>
+                                    <td>
+                                        <input type="text" name="full_name" required
+                                               oninvalid="this.setCustomValidity('Заповніть це поле!')"
+                                               oninput="setCustomValidity('')">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Email
+                                    </td>
+                                    <td>
+                                        <input type="text" name="email" value="{{ email }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Телефон
+                                    </td>
+                                    <td>
+                                        <input placeholder="+380XXXXXXXXX" type="text" name="phone_number" required
+                                               oninvalid="this.setCustomValidity('Заповніть це поле!')"
+                                               oninput="setCustomValidity('')">
+                                    </td>
+                                </tr>
+                                <tr style="display: none;">
+                                    <td>
+                                        Текущий користувач
+                                    </td>
+                                    <td>
+                                        <input type="text" name="is_authenticated" value="{{ user_id }}"
+                                        >
+                                    </td>
+                                </tr>
+                                <tr class="address_dost">
+                                    <td id="one_click">
+                                        Адреса доставки
+                                    </td>
+                                    <td>
+                                        <input class="order_adress natasha" placeholder="введіть місто/смт" type="text"
+                                               id='city' autocomplete="off"
+                                               name="address_order_city">
+                                        <input style="margin-top: 10px;" class="order_adress vid"
+                                               placeholder="введіть номер або адресу відділення" type="text" id='vidd'
+                                               autocomplete="off"
+                                               name="address_order_vidd">
+                                        <p id="log"></p>
+                                    </td>
+                                </tr>
+                                <tr class="comment_dost">
+                                    <td>
+                                        Коментар до замовлення
+                                    </td>
+                                    <td>
+                                        <textarea name="comment_to_order" id="order_comment"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Введіть символи
+                                    </td>
+                                    <td style="margin-top: 50px;">
+                                        {{ captcha.captcha }}
+                                        <button type="button" class="js-captcha-refresh">
+                                            <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"
+                                                 width="30px" height="30px">
+                                                <path d="M 15 3 C 12.031398 3 9.3028202 4.0834384 7.2070312 5.875 A 1.0001 1.0001 0 1 0 8.5058594 7.3945312 C 10.25407 5.9000929 12.516602 5 15 5 C 20.19656 5 24.450989 8.9379267 24.951172 14 L 22 14 L 26 20 L 30 14 L 26.949219 14 C 26.437925 7.8516588 21.277839 3 15 3 z M 4 10 L 0 16 L 3.0507812 16 C 3.562075 22.148341 8.7221607 27 15 27 C 17.968602 27 20.69718 25.916562 22.792969 24.125 A 1.0001 1.0001 0 1 0 21.494141 22.605469 C 19.74593 24.099907 17.483398 25 15 25 C 9.80344 25 5.5490109 21.062074 5.0488281 16 L 8 16 L 4 10 z"/>
+                                            </svg>
+                                        </button>
+                                        <p class="error_for_captcha" id="error_id"></p>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success submit_order">Оформити</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                </div>
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+
+    {% autoescape off %}
+    let x = ({{ export_json }})
+    {% endautoescape %}
+    let allAddress
+
+    const mainLayout = document.querySelector('main');
+    const productLayout = document.querySelector('.table');
+    const productLayout2 = document.querySelector('.btn-warning');
+    const productLayout3 = document.querySelector('.btn-success');
+    const products = document.querySelectorAll('.product');
+
+    for (let i = 0; i < products.length; i++) {
+        products[i].querySelector('#cart_remove').addEventListener('click', () => {
+            $.ajax({
+                type: 'POST',
+                data: {'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val()},
+                url: products[i].getAttribute('actionUrl'),
+                success: function (response) {
+                    products[i].remove();
+                    console.log(productLayout2);
+                    if (response.data === "Vitya") {
+                        productLayout.remove();
+                        productLayout2.remove();
+                        productLayout3.remove();
+                        mainLayout.insertAdjacentHTML('afterbegin', "<h1 style='color: black; margin-top: 40px; margin-left: 40px;'> Your cart is empty </h1>");
+                    } else {
+                        $(".sum_total").html(response.data);
+                        $(".total_cart_sum").html(response.data);
+                    }
+
+                }
+            })
+        })
+
+    }
+
+    for (let i = 0; i < products.length; i++) {
+        products[i].querySelector('.update_item').addEventListener('click', () => {
+            const data_form = products[i].querySelector('.update_form')
+            const product_quantity = products[i].querySelector('.product_quantity')
+            const product_sum = products[i].querySelector('.product_sum')
+
+            $(data_form).submit(function () {
+                $.ajax({
+                    data: $(this).serialize(),
+                    type: $(this).attr('method'),
+                    url: products[i].getAttribute('actionUrl2'),
+                    success: function (response) {
+                        var partsArray = response.data.split('-');
+                        console.log(partsArray);
+                        $(product_quantity).html(partsArray[0]);
+                        $(product_sum).html(partsArray[1]);
+                        $(".sum_total").html(partsArray[2]);
+                        $(".total_cart_sum").html(partsArray[2]);
+                    }
+                })
+                ;
+                return false;
+            });
+        })
+    }
+
+    $(document).ready(function () {
+        $('#order_form').submit(function (ev) {
+            $.ajax({
+                data: $('.order_form').serialize(),
+                type: 'POST',
+                url: "{% url 'cart:take_order' %}",
+                success: function (response) {
+                    const myArray = response.split('$')
+                    if (response === "Введено не вірні літери, спробуйте ще раз") {
+                        $(".error_for_captcha").html(response);
+                        document.getElementById('id_captcha_1').value = ""
+                    } else if (myArray[1] === "Нема товару") {
+                        $(".js-captcha-refresh").trigger("click");
+                        $(".error_for_captcha").html('');
+                        swal({
+                            title: myArray[0],
+                            icon: "success"
+                        });
+                    } else {
+                        var partsArray = response.split('-');
+                        $('#order_form').trigger('reset');
+                        $(".close").trigger("click");
+                        $(".js-captcha-refresh").trigger("click");
+                        $(".error_for_captcha").html('');
+                        swal({
+                            title: `Дякуємо! Номер вашого замовлення: ${partsArray[1]}! Вам зателефонує менеджер в найближчий час для уточнення інформації!`,
+                            icon: "success"
+                        }).then((value) => {
+                            if (value === null) {
+                                window.location.assign('{% url 'cart:cart_delete_all' %}');
+                            } else {
+                                window.location.assign('{% url 'cart:cart_delete_all' %}');
                             }
-                      })
-                  })
-              }
+                        });
+
+                    }
+
+                }
+            });
+            ev.preventDefault();
+        })
+    })
+
+    $('.js-captcha-refresh').click(function () {
+        $.getJSON("/captcha/refresh/", function (result) {
+            $('.captcha').attr('src', result['image_url']);
+            $('#id_captcha_0').val(result['key'])
+        });
+    });
 
 
+    $('.address_dost').hide()
 
-          </script>
+    function myFunction() {
+        $('.address_dost').show();
+    }
+
+    function newFunction() {
+        $('.address_dost').hide()
+    }
+
+
+    $(function () {
+        $('#city').autocomplete({
+            source: x,
+            minLength: 0
+        });
+    }).focus(function () {
+        $(this).trigger('keydown.autocomplete');
+    });
+    $('#city').click(function () {
+        $(this).autocomplete("search", "");
+    })
+
+
+    const textarea = document.querySelector('.natasha');
+    textarea.addEventListener('blur', updateValue);
+
+    function updateValue() {
+        console.log('work');
+        const area = document.getElementById("city");
+        same = area.value
+        $.ajax({
+            type: "POST",
+            url: "{% url 'cart:take_order' %}",
+            data: {'MyValue': same, 'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val()},
+            success:
+                function (response) {
+                    $(function () {
+                        let myArray = response.split("$");
+                        console.log(myArray);
+                        $('#vidd').autocomplete({
+                            source: myArray,
+                            minLength: 0
+                        });
+                    }).focus(function () {
+                        $(this).trigger('keydown.autocomplete');
+                    });
+                }
+        })
+
+
+    }
+
+</script>
 {% endif %}
 {% endblock %}
 

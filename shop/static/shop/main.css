@@ -7,10 +7,122 @@ main {
 
 }
 
+.no_button {
+    display: none;
+}
+
+.profile_name{
+    font-size: 25px;
+}
+
+.profile_email {
+    font-size: 20px;
+}
+
+.round {
+    border-radius: 100px !important; /* Радиус скругления */
+    box-shadow: 0 0 0 2px green, 0 0 13px #333; /* Параметры теней */
+}
+
+.dodik input {
+    display: none;
+}
+
+.order_form {
+    margin: 0;
+    padding: 0;
+}
+
+.order_form input.order_adress {
+    padding: 1px 2px 1px 2px;
+    width: 295px !important;
+}
+
+.close {
+    outline: none;
+    border: 0;
+    background-color: transparent;
+}
+
+.order_form textarea {
+    width: 295px;
+    height: 80px;
+    margin: 5px 0 12px 0;
+}
+
+.error_for_captcha {
+    margin-top: 7px;
+    color: red;
+
+}
+
+/*.if_none {*/
+/*    display: none;*/
+/*}*/
+
+.order_form td {
+    font-size: 14px;
+    padding: 5px 15px 10px 0;
+    vertical-align: middle;
+}
+
+.captcha {
+    width: 110px;
+    height: 65px;
+    margin-bottom: 20px;
+}
+
+.add_car {
+    float: right;
+    margin-right: 172px;
+}
+
+.profile_title{
+    margin-bottom: 40px;
+}
+
+.profile {
+    margin-bottom: 15px !important;
+    width: 80% !important;
+}
+
+.delete_auto {
+    margin-left: 213px;
+    margin-top: 48px;
+}
+
+.profile{
+    border-radius: 0.75rem;
+}
+
+.profile img {
+    border-radius: 0.75rem;
+}
+
+.car_image input {
+    display: none;
+}
+
+.profile_form {
+    padding: 20px !important;
+}
+
+.profile_butt {
+    margin-left: 15px;
+}
+
 .my_success {
     margin-left: 166px !important;
     margin-right: 166px !important;
     margin-top: 46px;
+}
+
+.ui-autocomplete {
+   z-index: 9999999 !important;
+}
+
+.my_m_title {
+    margin-left: 15px;
 }
 
 .navbar {
@@ -451,8 +563,41 @@ h1 {
   background-color: #ffa940;
 }
 
+.delivery_select {
+    vertical-align: top;
+    padding-top: 3px !important;
+}
+
+
+
+.delivery_text {
+    padding: 0 0 12px 8px;
+}
+
+.bilet {
+    border-top: dotted #d4d4d4 1px;
+    border-bottom: dotted #d4d4d4 1px;
+    background: #f7f7f7;
+    padding: 25px 25px 8px 25px;
+    margin-bottom: 16px;
+}
+
+.my_cart_order{
+    display: table;
+    border-collapse: separate;
+    box-sizing: border-box;
+    text-indent: initial;
+    border-spacing: 2px;
+    border-color: grey;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
 .my_cart {
     border: 2px solid darkgrey;
+    background-color: white;
     border-collapse: collapse;
     width: 70%;
     align-content: center;
@@ -471,6 +616,69 @@ td {
   -webkit-border-radius: 9px;
   -moz-border-radius: 9px;
   border-radius: 9px;
+}
+
+.hr  {
+    border-bottom: 1px solid #dee2e6;
+    width: 100%;
+
+}
+
+.str {
+    border-bottom: 2px dashed #dee2e6;
+    width: 100%;
+}
+
+.order_history {
+    padding-right: 171px;
+}
+
+.now_shadow{
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+    margin-top: 25px;
+}
+
+.empty_history {
+    border: 1px solid grey;
+    box-shadow: 3px 2px 2px #dc3545;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.order_table_hr {
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 45px;
+    margin-top: 45px;
+    box-shadow: 7px 4px 4px #ffc107;
+}
+
+.order_table {
+    border: 2px solid black;
+    border-collapse: separate !important;
+    background-color: white;
+    border-radius: 10px !important;
+    width: 100% !important;
+    margin-right: auto;
+    margin-top: 40px;
+}
+
+.order_table tr td {
+    border: 1px solid #6c757d;
+    border-radius: 2px !important;
+}
+
+.orange {
+    border-bottom: 1px solid orange;
+    width: 100%;
+    padding-top: 10px;
 }
 
 .label-warning[href],
@@ -506,6 +714,22 @@ td {
 .update_form svg path {
     fill: green;
 }
+
+.order_form svg {
+    width: 25px;
+}
+
+.order_form svg path {
+    fill: green;
+}
+
+.order_form .js-captcha-refresh {
+    outline: none;
+    border: 0;
+    background-color: transparent;
+}
+
+
 
 .navbar-nav {
     width: 100%;
@@ -569,7 +793,6 @@ td {
     margin-top: 20px;
     /* Чёрная рамка */
     border-radius: 3px;
-    margin-bottom: 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;

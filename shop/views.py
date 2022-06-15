@@ -4,13 +4,17 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render, redirect, reverse
-from .models import Products
+from .models import Products, AvailableMarks
+from users.models import Order, TypeOfRepair, Cars
+from django.utils import timezone
+from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib import messages
 from cart.forms import CartAddProductForm
 from .models import AvailableMarks
+from users.models import TypeOfRepair
 from .cars_dict import cars
 
 from .forms import SearchForm, RepairForm
@@ -18,8 +22,12 @@ from .forms import SearchForm, RepairForm
 
 def home(request):
     start = 'Hello Kolischa'
+    all_types_of_repair = TypeOfRepair.objects.all()
+    data = {
+        'AllTypesOfRepair': all_types_of_repair
+    }
 
-    return render(request, 'shop/home.html')
+    return render(request, 'shop/home.html', data)
 
 
 class ProductsView(ListView):
@@ -56,6 +64,7 @@ class ProductsView(ListView):
 def filter_data(request):
     stuff = request.POST.get('cat')
     tags = Products.objects.all().filter(category__category=stuff)
+    # код для сохранения данных из json в бд
     # for k, v in cars['list'].items():
     #     b2 = AvailableMarks(name=f'{k}', is_available=True)
     #     b2.save()
@@ -136,18 +145,82 @@ def product_detail(request, pk):
 
 
 def repair(request, type_name):
-    types_of_repair_list = ['Шиномонтаж', 'Кузовний ремонт', 'Ремонт ходової', 'Покраска', 'Ремонт тормозної системи',
-                            'Диагностика та ТО']
+    types_of_repair_list = []
+    # открываем json с доступными марками
+    f = open('shop/is_available.json')
+    data = json.load(f)
+    print(data)
+
+    all_types_of_repair = TypeOfRepair.objects.all()
+    for i in all_types_of_repair:
+        types_of_repair_list.append(i.type)
 
     if request.method == 'POST':
-        mark_var = request.POST
-        print(mark_var)
+        current_user_id = request.user.id
+        req_dict = dict(request.POST)
+        # собираем данные с пост запроса про юзера и форматируем
+        # их в нужном формате
+        current_type_of_repair = req_dict['type_of_repair'][0]
+        type_object = TypeOfRepair.objects.get(type=current_type_of_repair)
+        first_name = req_dict['Name_of_user'][0]
+        last_name = '----'
+        is_available_mark = req_dict['marka'][0]
+
+        if request.user.is_authenticated and req_dict['marka'][0] != '' and req_dict['marka'][0] in data:
+            user_object = User.objects.get(id=current_user_id)
+            user_surname = user_object.last_name
+            user_name = user_object.first_name
+
+            is_available_object = AvailableMarks.objects.get(name=is_available_mark)
+            if is_available_object.is_available:
+                b = Order(user=user_object, first_name=user_name, last_name=user_surname,
+                          phone_number=req_dict['phone_number'][0], type=type_object,
+                          marka=req_dict['marka'][0], model=req_dict['model'][0], year_of_car=req_dict['year'][0])
+                b.save()
+
+        elif request.user.is_authenticated and (req_dict['marka'][0] == '' or req_dict['marka'][0] not in data):
+            user_object = User.objects.get(id=current_user_id)
+            user_surname = user_object.last_name
+            user_name = user_object.first_name
+
+            b = Order(user=user_object, first_name=user_name, last_name=user_surname,
+                      phone_number=req_dict['phone_number'][0], type=type_object,
+                      marka=req_dict['marka'][0], model=req_dict['model'][0], year_of_car=req_dict['year'][0])
+            b.save()
+
+        elif not request.user.is_authenticated and req_dict['marka'][0] != '' and req_dict['marka'][0] in data:
+            is_available_object = AvailableMarks.objects.get(name=is_available_mark)
+            if is_available_object.is_available:
+                b = Order(first_name=first_name, last_name=last_name, phone_number=req_dict['phone_number'][0],
+                          type=type_object, marka=req_dict['marka'][0], model=req_dict['model'][0],
+                          year_of_car=req_dict['year'][0])
+                b.save()
+
+        elif not request.user.is_authenticated and (req_dict['marka'][0] == '' or req_dict['marka'][0] not in data):
+            b = Order(first_name=first_name, last_name=last_name, phone_number=req_dict['phone_number'][0],
+                      type=type_object, marka=req_dict['marka'][0], model=req_dict['model'][0],
+                      year_of_car=req_dict['year'][0])
+            b.save()
+
         return redirect('home')
 
     else:
+        users_name = ''
+        users_surname = ''
+        main_marka = ''
+        main_model = ''
+        if request.user.is_authenticated:
+            t = Cars.objects.filter(user_id=request.user.id)
+            name_of_user = User.objects.get(id=request.user.id)
+            for i in t:
+                if i.is_main_car:
+                    main_marka = i.marka
+                    main_model = i.model
+
+            users_name = name_of_user.first_name
+            users_surname = name_of_user.last_name
+
         is_available_list = AvailableMarks.objects.all()
-        f = open('shop/is_available.json')
-        data = json.load(f)
         empty_dict = dict()
 
         for i in is_available_list:
@@ -162,4 +235,5 @@ def repair(request, type_name):
         x = RepairForm()
         return render(request, 'shop/repair.html',
                       {'form': x, 'type_of_repair': type_name, 'types_of_repair_list': types_of_repair_list,
-                       'My_json': json_dict})
+                       'My_json': json_dict, 'main_marka': main_marka, 'main_model': main_model,
+                       'users_name': users_name, 'users_surname': users_surname})

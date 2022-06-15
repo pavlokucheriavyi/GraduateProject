@@ -11,10 +11,14 @@
             <div class="repair_form">
         <form method="post" id="CarsForm">
             {% csrf_token %}
+            {% if users_name != '' and users_surname != '' %}
+            <p><label class="repair_label">Ваші ініціали</label><input placeholder="Всеволод Ігорович" value="{{ users_name }} {{ users_surname }}" type="text" class="repair_input" name="Name_of_user" required oninvalid="this.setCustomValidity('Заповніть це поле!')" oninput="setCustomValidity('')"></p>
+            {% else %}
             <p><label class="repair_label">Ваші ініціали</label><input placeholder="Всеволод Ігорович" type="text" class="repair_input" name="Name_of_user" required oninvalid="this.setCustomValidity('Заповніть це поле!')" oninput="setCustomValidity('')"></p>
+            {% endif %}
             <p><label class="repair_label">Телефон</label><input placeholder="+38 (050) 235 3587" type="text" class="repair_input" name="phone_number" required oninvalid="this.setCustomValidity('Заповніть це поле!')" oninput="setCustomValidity('')"></p>
-            <p><label class="repair_label">Марка авто</label><input type="text" class="repair_input" id="id" name="marka" ></p>
-            <p><label class="repair_label">Модель авто</label><input placeholder="Спочатку виберіть марку" type="text" id="nat" class="repair_input" name="model"></p>
+            <p><label class="repair_label">Марка авто</label><input type="text" value="{{ main_marka }}" autocomplete="off" class="repair_input" id="id" name="marka" ></p>
+            <p><label class="repair_label">Модель авто</label><input placeholder="Спочатку виберіть марку" value="{{ main_model }}" autocomplete="off" type="text" id="nat" class="repair_input" name="model"></p>
             <p><label class="repair_label">Рік випуску</label><input placeholder="2007" type="text" class="repair_input" name="year"></p>
             <p><label class="repair_label">Вид ремонту</label><select name="type_of_repair" id="tp" class="repair_input my_dropdown" name="TypeRep">
                 <option>{{ type_of_repair }}</option>
@@ -38,10 +42,9 @@
 <script type="text/javascript">
     {% autoescape off %}
     let x = ({{ My_json }})
-    console.log(x);
     {% endautoescape %}
 
-    let same = null
+    let same = document.getElementById('id').value
     let finalList = null
 
     let CarsDict = {
@@ -4014,7 +4017,6 @@
                       });
                       }
             });
-
     if (same in CarsDict){
         if (same === '') { finalList = ['Спочатку виберіть марку'] } else { finalList = CarsDict[same] }
         $( "#nat" ).autocomplete({
@@ -4023,9 +4025,6 @@
             });
         $(this).autocomplete("search", "");
         }
-    else {
-        document.getElementById('id').value = '';
-    }
     })
 
 
@@ -4035,7 +4034,7 @@
                    data: $(this).serialize(),
                    type: $(this).attr('method'),
                    success: function () {
-                       if (x[same] === true) {
+                       if (x[same] === true || !(same in x)) {
                         swal({
                                   title: "Дякуємо! Вам зателефонує менеджер в найближчий час!",
                                   icon: "success"
