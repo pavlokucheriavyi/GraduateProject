@@ -17,16 +17,17 @@ from .forms import CaptchaTestForm
 @require_POST
 def cart_add(request, product_id):
     cart = Cart(request)
+    print(request.POST)
     # really_dict_request = dict()
     # for k, v in dict(request.POST).items():
     #     really_dict_request[k] = v[-1]
     product = get_object_or_404(Products, id=product_id)
     req_dict = dict(request.POST)
-    if product.count == 0:
+    if product.count == 0 and 'update' not in req_dict:
         error = f'Наразі нажаль товару "{product.title}" немає в наявності$Нема товару'
 
         return HttpResponse(error)
-    elif product.count < int(req_dict['quantity'][0]) and product.count != 0:
+    elif product.count < int(req_dict['quantity'][0]) and product.count != 0 and 'update' not in req_dict:
         error = f'Такої кількості товару "{product.title}" немає в наявності, ' \
                 f'ви можете придбати максимум {product.count} штук$Нема товару'
         return HttpResponse(error)
