@@ -1,1 +1,1 @@
-web: gunicorn sto-kolischa.wsgi
+web: gunicorn kolischa.wsgi
