@@ -43,11 +43,11 @@ def cart_add(request, product_id):
         )
 
     y = dict(request.POST)
-    try:
-        send_mail('Last message', 'Its text of message', 'kobra1903@ukr.net', ['kuchriavy10@gmail.com', 'kucheriavy10@icloud.com', 'test-ykf0q4akt@srv1.mail-tester.com'], fail_silently=True)
-        print('All good with message')
-    except BadHeaderError:
-        print('Invalid message ')
+    # try:
+    #     send_mail('Last message', 'Its text of message', 'kobra1903@ukr.net', ['kuchriavy10@gmail.com', 'kucheriavy10@icloud.com', 'test-ykf0q4akt@srv1.mail-tester.com'], fail_silently=True)
+    #     print('All good with message')
+    # except BadHeaderError:
+    #     print('Invalid message ')
     count = y['quantity'][0]
     x = Products.objects.get(id=product_id)
     product_sum = "%.2f" % float(float(x.price) * int(count))
