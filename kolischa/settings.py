@@ -126,3 +126,11 @@ try:
     from .local_settings import *
 except ModuleNotFoundError:
     from .prod_settings import *
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
+SENDGRID_API_KEY = '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'
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

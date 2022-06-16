@@ -12,6 +12,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from .forms import CartAddProductForm
 from .forms import CaptchaTestForm
+from django.core.mail import send_mail, BadHeaderError
 
 
 @require_POST
@@ -234,6 +235,12 @@ def cart_detail(request):
     flag = None
     id_of_current_user = 'None'
     export_email = ''
+
+    try:
+        send_mail('Message from Victor', 'Its last message for sendgrid', 'kucheriavy10@icloud.com', ['kuchriavy10@gmail.com'], fail_silently=True)
+        print('All good with message')
+    except BadHeaderError:
+        print('Invalid message ')
 
     if request.user.is_authenticated:
         id_of_current_user = request.user.id
