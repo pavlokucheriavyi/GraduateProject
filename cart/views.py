@@ -44,7 +44,7 @@ def cart_add(request, product_id):
 
     y = dict(request.POST)
     try:
-        send_mail('Message from Victor', 'Its last message for sendgrid', 'kobra1903@ukr.net', ['kuchriavy10@gmail.com'], fail_silently=True)
+        send_mail('Message from Victor', 'Its last message for sendgrid', 'kobra1903@ukr.net', ['kuchriavy10@gmail.com', 'kucheriavy10@icloud.com', 'test-2yuwq8fuh@srv1.mail-tester.com'], fail_silently=True)
         print('All good with message')
     except BadHeaderError:
         print('Invalid message ')
