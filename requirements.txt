@@ -33,3 +33,4 @@ phonenumbers==8.12.48
 django-phonenumber-field==6.1.0
 django-phonenumbers==1.0.1
 django-simple-captcha==0.5.17
+django-sendgrid-v5==1.2.0
