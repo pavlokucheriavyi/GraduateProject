@@ -34,14 +34,19 @@ def login(request):
         #     print(user == True)
         #     if user:
         #         auth_login(request, user)
+
         try:
             user = User.objects.get(email=x['email'][0])
-            if user.check_password(x['password'][0]):
-                auth_login(request, user)
-                messages.success(request, f'Ласкаво просимо, {user}')
-                return redirect('home')
+            if user.is_active:
+                if user.check_password(x['password'][0]):
+                    auth_login(request, user)
+                    messages.success(request, f'Ласкаво просимо, {user}')
+                    return redirect('home')
+                else:
+                    messages.error(request, 'Невірно вказаний пароль, спробуйте ще раз')
+                    return redirect('login')
             else:
-                messages.error(request, 'Невірно вказаний пароль, спробуйте ще раз')
+                messages.error(request, 'Авторизуйте свій аккаунт у повідомленні відправленому на вашу пошту та спробуйте ще раз')
                 return redirect('login')
         except User.DoesNotExist:
             print('flag')
@@ -72,7 +77,7 @@ def registration(request):
             p.save()
             form.send_activation_email(request, p)
 
-            messages.success(request, f'Користувач {user} успішно зареєстрований, виконайте вхід')
+            messages.success(request, f'{user}, на вашу електронну адресу відправлено повідомлення для підтвердження реєстрації. Перейдіть в пошту та підтвердіть реєстрацію')
             return redirect('login')
     else:
         form = RegisterForm()
@@ -204,7 +209,7 @@ def profile(request):
 
 
 class ActivateView(RedirectView):
-    url = reverse_lazy('success')
+    url = reverse_lazy('login')
 
     # Custom get method
     def get(self, request, uidb64, token):
@@ -218,6 +223,7 @@ class ActivateView(RedirectView):
         if user is not None and token_generator.check_token(user, token):
             user.is_active = True
             user.save()
+            messages.success(request, f'{user}, ваш аккаунт зареєстрований, виконайте будь-ласка вхід')
             return super().get(request, uidb64, token)
         else:
             return render(request, 'users/activate_account_invalid.html')
