@@ -1,9 +1,20 @@
 {% extends "shop/base.html" %}
 {% load static %}
 {% block content %}
-    <div>
-        <h2>No activate</h2>
-
-
-    </div>
+    {% if messages %}
+    {% for mess in messages %}
+        {% if mess.tags == "error" %}
+            <div class="alert alert-danger my_success" role="alert">{{mess}}</div>
+        {% else %}
+            <div class="alert alert-success my_success" role="alert">{{mess}}</div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'home' %}"
+                                   style="margin-left: 167px !important; margin-top: 15px;" class="btn btn-outline-danger delete_button">На головну</a>
+    {% else %}
+        <a href="{% url 'home' %}"
+                                   style="margin-left: 167px !important; margin-top: 15px;" class="btn btn-warning delete_button">Увійти</a>
+    {% endif %}
 {% endblock %}

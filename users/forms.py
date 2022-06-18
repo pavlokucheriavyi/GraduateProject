@@ -67,7 +67,6 @@ class RegisterForm(UserCreationForm):
         )
 
         # send_mail(subject, message, 'kobra1903@ukr.net', ['test-ykf0q4akt@srv1.mail-tester.com'], html_message=message, fail_silently=True)
-        print('All good with message')
 
         user.email_user(subject, message, html_message=message)
 

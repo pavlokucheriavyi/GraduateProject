@@ -46,7 +46,8 @@ def login(request):
                     messages.error(request, 'Невірно вказаний пароль, спробуйте ще раз')
                     return redirect('login')
             else:
-                messages.error(request, 'Авторизуйте свій аккаунт у повідомленні відправленому на вашу пошту та спробуйте ще раз')
+                messages.error(request,
+                               'Авторизуйте свій аккаунт у повідомленні відправленому на вашу пошту та спробуйте ще раз')
                 return redirect('login')
         except User.DoesNotExist:
             print('flag')
@@ -77,7 +78,8 @@ def registration(request):
             p.save()
             form.send_activation_email(request, p)
 
-            messages.success(request, f'{user}, на вашу електронну адресу відправлено повідомлення для підтвердження реєстрації. Перейдіть в пошту та підтвердіть реєстрацію')
+            messages.success(request,
+                             f'{user}, на вашу електронну адресу відправлено повідомлення для підтвердження реєстрації. Перейдіть в пошту та підтвердіть реєстрацію')
             return redirect('login')
     else:
         form = RegisterForm()
@@ -213,10 +215,10 @@ class ActivateView(RedirectView):
 
     # Custom get method
     def get(self, request, uidb64, token):
-
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
+            print(user.is_authenticated)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
 
@@ -226,6 +228,9 @@ class ActivateView(RedirectView):
             messages.success(request, f'{user}, ваш аккаунт зареєстрований, виконайте будь-ласка вхід')
             return super().get(request, uidb64, token)
         else:
+
+            messages.success(request, f'Користувач з email - {user.email} вже активований')
+
             return render(request, 'users/activate_account_invalid.html')
 
 
