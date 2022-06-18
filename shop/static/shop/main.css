@@ -1,9 +1,14 @@
+
+html {
+    scroll-behavior: smooth;
+}
 body {
   background: #F5FFFA;
 }
 
 main {
     padding-top: 50px;
+    min-height: calc(100vh - 60px);
 
 }
 
@@ -486,10 +491,9 @@ h1 {
 	background: rgba(0,0,0,0);
 	color: #fbb03b;
 	box-shadow: inset 0 0 0 3px #fbb03b;
-
 }
 
-.shop_url:hover {
+.shop_link:hover > a > p {
     color: #fbb03b;
 }
 
@@ -523,6 +527,65 @@ h1 {
 .valik2 h6{
     margin-right: 20px;
 }
+
+.proposal {
+    position: fixed;
+    bottom: 0;
+    inset-inline-start: 0;
+
+    width: 100%;
+
+    background-color: #212529;
+}
+
+.proposal a {
+    color: #ffffff;
+
+    text-decoration: none;
+
+    letter-spacing: 0.02em;
+}
+
+.proposal__close {
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 30px;
+    transform: translateY(-50%);
+
+    width: 30px;
+    height: 30px;
+
+    cursor: pointer;
+}
+
+.proposal__close:before,
+.proposal__close:after {
+    content: "";
+
+    position: absolute;
+    top: 50%;
+    inset-inline-start: 50%;
+
+    width: 30px;
+    height: 2px;
+
+    background-color: #ffc107;
+    border-radius: 2px;
+}
+
+.proposal__close:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.proposal__close:after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.proposal_disactive {
+    display: none;
+}
+
+
 
 /*.carousel-control-prev,*/
 /*.carousel-control-next {*/
@@ -804,7 +867,6 @@ td {
     border-color: #bfbfbf;
     display: flex;
     width: 100%;
-    margin-bottom: 500px;
 }
 
 .alert-light .shopimg{
@@ -906,4 +968,39 @@ span {
 
 .log_in_button {
     width: 273px;
+}
+
+.footer__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 50px;
+    text-align: left!important;
+}
+
+.footer__contacts {
+    flex-basis: calc(50% - 20px);
+}
+
+.footer__contacts ul li:not(:last-of-type) {
+    margin-bottom: 20px;
+}
+
+.footer__contacts ul li a {
+    color: black;
+    letter-spacing: 0.02em;
+    font-weight: 700;
+}
+
+.footer__contacts ul {
+    list-style-type: circle;
+}
+
+.footer__map {
+    flex-basis: calc(50% - 20px);
+}
+
+.footer__map iframe {
+    width: 100%;
+    height: 300px;
 }

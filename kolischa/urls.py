@@ -21,7 +21,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib.auth import views as vws
 from users.forms import CustomAuthForm
 from django.contrib.auth import views as auth_views
-from users import views
+from users.views import ActivateView, CheckEmailView, SuccessView, login, registration
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,10 +30,12 @@ urlpatterns = [
     path('', include('shop.urls')),
     path('captcha/', include('captcha.urls')),
     path('api/', include('marks_api.urls')),
-    path('logIn/', views.login, name='login'),
-    path('registration/', views.registration, name='registration'),
-    path('exit', vws.LogoutView.as_view(template_name='users/exit.html'), name='exit')
-
+    path('logIn/', login, name='login'),
+    path('registration/', registration, name='registration'),
+    path('exit', vws.LogoutView.as_view(template_name='users/exit.html'), name='exit'),
+    path('activate/<uidb64>/<token>/', ActivateView.as_view(), name="activate"),
+    path('check-email/', CheckEmailView.as_view(), name="check_email"),
+    path('success/', SuccessView.as_view(), name="success"),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -3,12 +3,18 @@ from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
+from django.views.generic import RedirectView, TemplateView
+
 from .forms import CustomAuthForm
 from .models import Profile, Cars, Order
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from .forms import CustomAuthForm, RegisterForm, UpdateUserForm, UserImageForm, CarImageForm
 from .decorators import anonymous_required
+from .token import token_generator
 
 
 def check_order(status):
@@ -59,8 +65,13 @@ def registration(request):
             messages.error(request, f'Не корректний логін, спробуйте інший')
             return redirect('registration')
         elif form.is_valid():
-            form.save()
             user = form.cleaned_data.get('username')
+            form.save()
+            p = User.objects.get(email=form.cleaned_data.get('email'))
+            p.is_active = False
+            p.save()
+            form.send_activation_email(request, p)
+
             messages.success(request, f'Користувач {user} успішно зареєстрований, виконайте вхід')
             return redirect('login')
     else:
@@ -190,3 +201,31 @@ def profile(request):
     }
 
     return render(request, 'users/profile.html', data)
+
+
+class ActivateView(RedirectView):
+    url = reverse_lazy('success')
+
+    # Custom get method
+    def get(self, request, uidb64, token):
+
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and token_generator.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return super().get(request, uidb64, token)
+        else:
+            return render(request, 'users/activate_account_invalid.html')
+
+
+class CheckEmailView(TemplateView):
+    template_name = 'users/check_email.html'
+
+
+class SuccessView(TemplateView):
+    template_name = 'users/success.html'

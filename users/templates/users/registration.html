@@ -14,14 +14,14 @@
 <div class="style_form">
 <form method="post" class="user_in_form">
     {% csrf_token %}
-    <p>{{ form.first_name }}</p>
-    <p>{{ form.first_name.errors }}</p>
-    <p>{{ form.last_name }}</p>
-    <p>{{ form.last_name.errors }}</p>
     <p>{{ form.username }}</p>
     <p>{{ form.username.errors }}</p>
     <p>{{ form.email }}</p>
     <p>{{ form.email.errors }}</p>
+    <p>{{ form.first_name }}</p>
+    <p>{{ form.first_name.errors }}</p>
+    <p>{{ form.last_name }}</p>
+    <p>{{ form.last_name.errors }}</p>
     <p>{{ form.password1 }}</p>
     <p>{{ form.password1.errors }}</p>
     <p>{{ form.password2 }}</p>
@@ -39,5 +39,9 @@
 
       </div>
 </div>
+
+    <script>
+    document.querySelector("#id_username").setAttribute("autofocus", "false");
+    </script>
 
 {% endblock %}

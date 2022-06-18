@@ -20,7 +20,6 @@
     <title>Document</title>
     <link rel="shortcut icon" href="#"/>
 </head>
-
 <body>
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <a class="navbar-brand" style="margin-left: 10px;" href="{% url 'home' %}">Головна</a>
@@ -36,6 +35,10 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'repair_page' type_name='Шиномонтаж' %}">Замовити послугу</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#footer">Контакти</a>
             </li>
             <div class="timals">
                 <div class="cart_message">
@@ -74,33 +77,86 @@
 
 </main>
 
-{% if not user.is_authenticated %}
-    <div style="width: 100%; border: 2px solid red; padding: 10px;">
-        <a href="{% url 'registration' %}" style="display: block; text-align: center;">Зареєструйтеся та майте
-            можливість відслілковувати статус вашого ремонту та
-            отримайте знижку на першу покупку запчастин 20%
-        </a>
-    </div>
-{% elif user.is_authenticated and sections == 'New_user' %}
-    <div style="width: 100%; border: 2px solid red; padding: 10px;" class="discount">
-        <a href="{% url 'shop' %}" style="display: block; text-align: center;">
-            У вас діє знижка на одне замовлення товару 20%
-        </a>
-    </div>
-{% endif %}
-<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2595.882303597431!2d32.107372895492524!3d49.411131402348104!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d14b2fc93b744f%3A0x5b86ae3d3556aa84!2z0KHQotCeIMKr0JrQvtC70ZbRidCwwrs!5e0!3m2!1sru!2sua!4v1649248906130!5m2!1sru!2sua"
-        width=87% height="450"
-        style="border:0; margin-left: auto; margin-right: auto; display: block; margin-top: 100px;"
-        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<div class="proposal">
+    <div class="proposal__close"></div>
 
-<footer class="py-3 my-4 mt-5">
+    {% if not user.is_authenticated %}
+        <div style="width: 100%; padding: 20px 10px;">
+            <a href="{% url 'registration' %}" style="display: block; text-align: center;">Зареєструйтеся та майте
+                можливість відслілковувати статус вашого ремонту та
+                отримайте знижку на першу покупку запчастин 20%
+            </a>
+        </div>
+    {% elif user.is_authenticated and sections == 'New_user' %}
+        <div style="width: 100%; padding: 20px 10px;" class="discount">
+            <a href="{% url 'shop' %}" style="display: block; text-align: center;">
+                У вас діє знижка на одне замовлення товару 20%
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    const proposal = document.querySelector('.proposal');
+    const closeBtn = proposal.querySelector('.proposal__close');
+
+    if (!sessionStorage.activeProposal) {
+        sessionStorage.activeProposal = "active";
+    }
+
+    if (sessionStorage.activeProposal === "disactive") {
+        proposal.classList.add("proposal_disactive");
+    }
+
+    closeBtn.addEventListener('click', () => {
+        proposal.classList.add("proposal_disactive");
+        sessionStorage.activeProposal = "disactive";
+    });
+</script>
+
+
+<footer id="footer" class="py-3 my-4 mt-5">
+    <div class="content">
+        <div class="footer__inner">
+            <div class="footer__contacts">
+                <ul>
+                    <li>
+                        <p>
+                            Телефон
+                        </p>
+
+                        <a href="tel:+3805057734">+3805057734</a>
+                    </li>
+
+                    <li>
+                        <p>
+                            Email
+                        </p>
+
+                        <a href="mailto:golosov@gmail.com">golosov@gmail.com</a>
+                    </li>
+
+                    <li>
+                        <p>
+                            Адрес
+                        </p>
+
+                        <p>вулиця Чигиринська, 13А</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer__map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2595.882303597431!2d32.107372895492524!3d49.411131402348104!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d14b2fc93b744f%3A0x5b86ae3d3556aa84!2z0KHQotCeIMKr0JrQvtC70ZbRidCwwrs!5e0!3m2!1sru!2sua!4v1649248906130!5m2!1sru!2sua"
+                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-2 text-muted">Home</a></li>
-
-
-        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-2 text-muted">About</a></li>
+        <li class="nav-item"><a href="{% url 'home' %}" class="nav-link px-2 text-muted">Головна</a></li>
     </ul>
-    <p class="text-center text-muted">© 2021 Company, Inc</p>
+    <p class="text-center text-muted">© 2022 KOLISCHA</p>
 </footer>
 </body>
 
