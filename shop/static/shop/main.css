@@ -381,7 +381,7 @@ h1 {
     height: 432px;
     margin-bottom: 100px;
     background-image: url(feature.jpg);
-
+    border-radius: 1em;
 }
 
 .my_time_dict {
@@ -483,7 +483,7 @@ h1 {
   text-decoration: none;
   color: white;
   transition: .3s ease-in-out;
-
+    border-radius: 1em;
 }
 
 
@@ -516,6 +516,7 @@ h1 {
   object-fit: cover;
   width: 100%;
   height: auto;
+    border-radius: 0.4em;
 }
 
 .valik2{
