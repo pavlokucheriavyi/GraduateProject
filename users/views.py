@@ -1,18 +1,22 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic import RedirectView, TemplateView
-
+from django.contrib.auth.forms import PasswordResetForm
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from .forms import CustomAuthForm
 from .models import Profile, Cars, Order
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
-from .forms import CustomAuthForm, RegisterForm, UpdateUserForm, UserImageForm, CarImageForm
+from .forms import CustomAuthForm, RegisterForm, UpdateUserForm, UserImageForm, CarImageForm, UpdatePasswordForm
 from .decorators import anonymous_required
 from .token import token_generator
 
@@ -58,6 +62,38 @@ def login(request):
     context = {'form': form}
 
     return render(request, 'users/user.html', context)
+
+
+@anonymous_required(redirect_url='home')
+def reset_password(request):
+    if request.method == 'POST':
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            try:
+                user = User.objects.get(email=data)
+                current_site = get_current_site(request)
+                subject = 'Reset your password'
+                message = render_to_string(
+                    'users/reset_password_mail.html',
+                    {
+                        'user': user,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                        'token': token_generator.make_token(user),
+                    }
+                )
+
+                # send_mail(subject, message, 'kobra1903@ukr.net', ['test-ykf0q4akt@srv1.mail-tester.com'], html_message=message, fail_silently=True)
+
+                user.email_user(subject, message, html_message=message)
+                return redirect('reset_password_done')
+            except User.DoesNotExist:
+                messages.error(request, 'Користувача с таким email не існує')
+                return redirect('login')
+    form = PasswordResetForm()
+    return render(request=request, template_name="users/reset_password.html",
+                  context={"form": form})
 
 
 @anonymous_required(redirect_url='home')

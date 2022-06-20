@@ -31,7 +31,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'marks_api',
     'phonenumber_field',
-    'captcha'
+    'captcha',
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -136,3 +137,6 @@ EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = 'kobra1903@ukr.net'
 EMAIL_USE_TLS = True
+
+
+CRISPY_TEMPLATE_PACK = 'uni_form'

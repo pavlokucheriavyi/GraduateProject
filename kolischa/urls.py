@@ -21,7 +21,12 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib.auth import views as vws
 from users.forms import CustomAuthForm
 from django.contrib.auth import views as auth_views
-from users.views import ActivateView, CheckEmailView, SuccessView, login, registration
+from users.views import (ActivateView,
+                         CheckEmailView,
+                         SuccessView,
+                         login,
+                         registration,
+                         reset_password)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,6 +41,10 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', ActivateView.as_view(), name="activate"),
     path('check-email/', CheckEmailView.as_view(), name="check_email"),
     path('success/', SuccessView.as_view(), name="success"),
+    path('reset_password/', reset_password, name="reset_password"),
+    path('reset_password_done/', auth_views.PasswordResetDoneView.as_view(template_name='users/reset_password_done.html'), name='reset_password_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="users/reset_password_confirm.html"), name='reset_password_confirm'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

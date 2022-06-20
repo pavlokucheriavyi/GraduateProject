@@ -71,6 +71,21 @@ class RegisterForm(UserCreationForm):
         user.email_user(subject, message, html_message=message)
 
 
+class UpdatePasswordForm(UserCreationForm):
+    password1 = forms.CharField(
+        required=True,
+        widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть пароль'})
+    )
+    password2 = forms.CharField(
+        required=True,
+        widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Підтвердіть пароль'})
+    )
+
+    class Meta:
+        model = User
+        fields = ['password1', 'password2']
+
+
 class UpdateUserForm(forms.ModelForm):
     first_name = forms.CharField(
         required=True,
@@ -121,3 +136,5 @@ class CarImageForm(forms.ModelForm):
     class Meta:
         model = Cars
         fields = ['img_of_avto']
+
+

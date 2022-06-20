@@ -21,7 +21,7 @@
     <p>{{ form.email }}</p>
     <p>{{ form.password }}</p>
 <p>Ви ще не зареєстровані?<a href="{% url 'registration' %}">Зареєструватись</a></p>
-<p>Забули пароль? <a href="#">Відновити</a></p>
+<p>Забули пароль? <a href="{% url 'reset_password' %}">Відновити</a></p>
 
     <input type="Submit" class="btn btn-outline-success log_in_button" name="submit" value="Вхід"/>
 </form>
