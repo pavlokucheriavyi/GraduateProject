@@ -81,6 +81,7 @@ def reset_password(request):
                         'domain': current_site.domain,
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token': token_generator.make_token(user),
+                        'protocol': 'https'
                     }
                 )
 
