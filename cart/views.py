@@ -1,7 +1,10 @@
+from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from shop.models import Products
-from users.models import PartsOrder, UndefinedParts, Profile
+from users.models import PartsOrder, UndefinedParts, Profile, Cars
 from django.core import serializers
 import json
 from .test import get_vidd
@@ -101,8 +104,10 @@ def take_order(request):
                 html = "HUMAN-"
                 order_str = ''
                 cart = Cart(request)
-                total_sum = "%.2f" % (float(cart.get_total_price()) * 0.8 if req_dict['is_authenticated'][
-                                                                                 0] != 'None' else cart.get_total_price())
+                total_sum = float(cart.get_total_price()) * 0.8 if req_dict['is_authenticated'][
+                                                                       0] != 'None' else cart.get_total_price()
+                export_total_sum = "%.2f" % float(total_sum)
+
                 num = 0
                 for i in cart:
                     num += 1
@@ -136,11 +141,13 @@ def take_order(request):
                 if req_dict['comment_to_order'][0] == '':
                     export_comment = '---------------------------'
 
+                # vars to send mail info
+                test_view(request, kwargs=req_dict)
                 b = PartsOrder(name=req_dict['full_name'][0], email=req_dict['email'][0],
                                phone_number=req_dict['phone_number'][0],
                                comment=export_comment,
                                is_authenticated_user=export_info_about_id,
-                               composition_order=order_str, summa=total_sum)
+                               composition_order=order_str, summa=export_total_sum)
                 b.save()
                 # save data to UndefinedParts db
                 for item in cart:
@@ -156,8 +163,10 @@ def take_order(request):
                 html = "HUMAN-"
                 order_str = ''
                 cart = Cart(request)
-                total_sum = "%.2f" % (float(cart.get_total_price()) * 0.8 if req_dict['is_authenticated'][
-                                                                                 0] != 'None' else cart.get_total_price())
+                total_sum = float(cart.get_total_price()) * 0.8 if req_dict['is_authenticated'][
+                                                                       0] != 'None' else cart.get_total_price()
+                export_total_sum = "%.2f" % float(total_sum)
+
                 num = 0
                 for i in cart:
                     # get object from Products model and edit count field
@@ -190,13 +199,15 @@ def take_order(request):
                 if req_dict['comment_to_order'][0] == '':
                     export_comment = '---------------------------'
 
+                # vars to send mail info
+                test_view(request, kwargs=req_dict)
                 b = PartsOrder(name=req_dict['full_name'][0], email=req_dict['email'][0],
                                phone_number=req_dict['phone_number'][0],
                                address_city=req_dict['address_order_city'][0],
                                address_vidd=req_dict['address_order_vidd'][0],
                                comment=export_comment,
                                is_authenticated_user=export_info_about_id,
-                               composition_order=order_str, summa=total_sum)
+                               composition_order=order_str, summa=export_total_sum)
                 b.save()
 
                 # save data to UndefinedParts db
@@ -261,3 +272,129 @@ def cart_delete_all(request):
     cart.delete()
 
     return render(request, 'cart/detail.html')
+
+
+def test_view(request, *args, **kwargs):
+    cart = Cart(request)
+    # send_cart_mail(request, req_dict)
+    # final_list = []
+    # for k, v in kwargs['kwargs'].items():
+    #     final_list.append(v[0])
+    x = kwargs['kwargs']
+    total_products_price = cart.get_total_price()
+
+
+    flag = None
+
+
+    # export all data to html mail
+    dict_user_info = is_user_buy_products(request, x['email'][0])
+    users_cars = get_users_cars(request)
+    orders_info = parse_dict(x)
+    print(users_cars)
+    # dict_user_info.update(users_cars)
+    # dict_user_info.update(orders_info)
+
+    if request.user.is_authenticated:
+        id_of_current_user = request.user.id
+        get_object_user = Profile.objects.get(user_id=id_of_current_user)
+
+
+        new_or_not = get_object_user.is_new_user
+        if new_or_not:
+            total_products_price = "%.2f" % (float(total_products_price) * 0.8)
+            flag = True
+    from_email = settings.DEFAULT_FROM_EMAIL
+    current_site = get_current_site(request)
+    subject = 'У вас нове замовлення запчастин'
+    message = render_to_string(
+        'cart/test.html',
+        {'cart': cart, 'total_products_price': total_products_price,
+         'flag': flag, 'domain': current_site.domain, 'protocol': 'http',
+         'dict_user_info': dict_user_info, 'users_cars': users_cars, 'orders_info': orders_info
+         }
+
+    )
+    # message = 'Bot'
+    send_mail(subject, message, from_email, ['kuchriavy10@gmail.com'], html_message=message,
+              fail_silently=True)
+
+
+def get_users_cars(request):
+    final_list = []
+    # get car/s of user if he is authorization
+    b = Cars.objects.filter(user_id=request.user.id)
+    if len(b) == 0:
+        little_dict = dict()
+        little_dict['Авто '] = "не вказано"
+        final_list.append(little_dict)
+    else:
+
+        num = 1
+        for i in b:
+            little_dict = dict()
+            status_of_car = ''
+            if i.is_main_car:
+                status_of_car = "   Головне авто"
+            little_dict[f'{num}. Марка: '] = i.marka + '  ' + status_of_car
+            little_dict['   Модель: '] = i.model
+            final_list.append(little_dict)
+            num += 1
+    return final_list
+
+
+def is_user_buy_products(request, my_email):
+    flag = ''
+    final_dict = dict()
+    if request.user.is_authenticated:
+        flag = True
+    else:
+        flag = False
+
+    try:
+        b = User.objects.get(email=my_email)
+        flag = True
+    except User.DoesNotExist:
+        flag = False
+
+    if not flag:
+        final_dict['Статус користувача: '] = 'Не зареєстрований'
+    else:
+        final_dict['Статус користувача: '] = 'Зареєстрований'
+
+    if flag:
+        b = User.objects.get(email=my_email)
+        final_dict['login: '] = b.username
+        final_dict['email: '] = b.email
+        final_dict['Ім`я: '] = b.first_name
+        final_dict['Прізвище: '] = b.last_name
+
+    return final_dict
+
+
+def parse_dict(my_dict):
+    final_dict = dict()
+    for k, v in my_dict.items():
+        if k == 'pay_method_id' or k == 'is_authenticated' or k == 'captcha_0' or k == 'captcha_0' or k == 'csrfmiddlewaretoken':
+            continue
+        elif k == 'delivery_method_id':
+            if v[0] == '1':
+                method_order = 'САМОВИВІЗ'
+                final_dict['Метод замовлення: '] = method_order
+            else:
+                method_order = "Доставка Нова Пошта"
+                final_dict['Метод замовлення: '] = method_order
+        elif k == 'full_name':
+            final_dict['ПІБ: '] = v[0]
+        elif k == 'email':
+            final_dict['email: '] = v[0]
+        elif k == 'phone_number':
+            final_dict['Номер телефону: '] = v[0]
+        elif k == 'address_order_city':
+            final_dict['Адреса доставки (Місто): '] = v[0]
+        elif k == 'address_order_vidd':
+            final_dict['Адреса доставки (Відділення): '] = v[0]
+        elif k == 'comment_to_order':
+            final_dict['Коментар до замовлення: '] = v[0]
+
+    return final_dict

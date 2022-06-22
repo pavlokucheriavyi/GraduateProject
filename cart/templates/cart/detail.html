@@ -1,7 +1,7 @@
 {% extends "shop/base.html" %}
 {% block content %}
 {% if cart|length == 0 %}
-<h1 style="margin-top: 10px;">Your Cart is empty</h1>
+<h2 style="margin-top: 75px; margin-left: 80px;">Ваша корзина порожня</h2>
 {% else %}
 <table class="table table-hover table-bordered text-center my_cart">
     <thead>
@@ -295,7 +295,7 @@
                         productLayout.remove();
                         productLayout2.remove();
                         productLayout3.remove();
-                        mainLayout.insertAdjacentHTML('afterbegin', "<h1 style='color: black; margin-top: 40px; margin-left: 40px;'> Your cart is empty </h1>");
+                        mainLayout.insertAdjacentHTML('afterbegin', "<h2 style='color: black; margin-top: 75px; margin-left: 80px;'> Ваша корзина порожня </h2>");
                     } else {
                         $(".sum_total").html(response.data);
                         $(".total_cart_sum").html(response.data);

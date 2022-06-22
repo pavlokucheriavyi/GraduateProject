@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, SetPasswordForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.forms.widgets import PasswordInput, TextInput
@@ -70,20 +70,6 @@ class RegisterForm(UserCreationForm):
 
         user.email_user(subject, message, html_message=message)
 
-
-class UpdatePasswordForm(UserCreationForm):
-    password1 = forms.CharField(
-        required=True,
-        widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Введіть пароль'})
-    )
-    password2 = forms.CharField(
-        required=True,
-        widget=PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Підтвердіть пароль'})
-    )
-
-    class Meta:
-        model = User
-        fields = ['password1', 'password2']
 
 
 class UpdateUserForm(forms.ModelForm):

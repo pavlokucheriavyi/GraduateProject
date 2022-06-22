@@ -20,7 +20,7 @@
                 </p>
             {% if OrderUserInfo|length == 0 %}
             <p>
-                <h3 style="font-family: cursive;">Наразі немає замовлень
+                <h3 style="font-family: cursive;">Наразі немає замовлень ремонту
                 <a href="{% url 'repair_page' type_name='Шиномонтаж' %}" class="btn btn-outline-secondary add_car">Замовити послугу</a>
             </h3>
             </p>
@@ -200,7 +200,7 @@
             {% endif %}
 
             <div class="order_history">
-                <h2 style="font-family: cursive; text-align: center; margin-top: 70px;">Ваша історія замовлень</h2>
+                <h2 style="font-family: cursive; text-align: center; margin-top: 70px;">Ваша історія замовлень ремонту</h2>
             {% if AllDisactiveOrders|length != 0 %}
                 <div class="hr order_table_hr"></div>
             <table class="table table-hover table-bordered text-center order_table">
@@ -225,7 +225,7 @@
             </table>
             {% else %}
                 <div class="hr now_shadow"></div>
-                <div class="empty_history"><h2 style="padding: 15px; text-align: center; font-family: cursive;">Історія замовлень порожня</h2></div>
+                <div class="empty_history"><h2 style="padding: 15px; text-align: center; font-family: cursive;">Історія замовлень ремонту порожня</h2></div>
             {% endif %}
             </div>
             </div>

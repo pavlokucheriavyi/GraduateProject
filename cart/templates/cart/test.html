@@ -1,0 +1,91 @@
+
+{% if cart|length == 0 %}
+<h2 style="margin-top: 75px; margin-left: 80px;">Ваша корзина порожня</h2>
+{% else %}
+
+<table class="table table-hover table-bordered text-center my_cart">
+    <thead>
+    <tr>
+        <th>Назва продукту</th>
+        <th style="padding: 20px;">Кількість</th>
+        <th>Ціна за штуку, грн</th>
+
+        <th style="padding: 20px;">Сума, грн</th>
+    </tr>
+    </thead>
+    <tbody>
+    <div class="NewCart">
+        {% for item in cart %}
+            {% with product=item.product %}
+                {% load static %}
+                <tr
+                        class="product"
+                        actionUrl="{% url 'cart:cart_remove' product.id %}"
+                        actionUrl2="{% url 'cart:cart_add' product.id %}"
+
+                >
+                    <td style="padding: 20px;"><a href="{{ protocol }}://{{ domain }}{{ product.get_absolute_url }}">{{ product.title }}</a></td>
+
+                    <td class="product_quantity" style="padding: 45px;">
+                        {{ item.quantity }}
+                    </td>
+                    <td class="num" style="padding: 60px;">{{ item.price }}</td>
+                    <td class="num product_sum" style="padding: 40px;">{{ item.total_price }}</td>
+                </tr>
+                {#              <script>#}
+                {#                    $(document).ready(function () {#}
+                {#                               $('.update_form').submit(function () {#}
+                {#                                   $.ajax({#}
+                {#                                       data: $(this).serialize(),#}
+                {#                                       type: $(this).attr('method'),#}
+                {#                                       url: "{% url 'cart:cart_add' product.id %}"#}
+                {#                                       //success: function () {#}
+                {##}
+                {#                                       //}#}
+                {##}
+                {##}
+                {#                                   })#}
+                {#                                   ;#}
+                {#                                   return false;#}
+                {#                               });#}
+                {#                           })#}
+                {#              </script>#}
+            {% endwith %}
+
+        {% endfor %}
+
+    </div>
+    <tr class="total" style="padding: 45px !important;">
+        <td style="font-weight: bold; font-size: large;">Загальна сума</td>
+        <td colspan="4">
+            {% if flag == True %}
+                <div style="float: right; font-weight: bolder; margin-left: 47px; margin-right: 45px;">{{ total_products_price }}</div>
+                <div style="float: right; color: green; margin-left: 43px;">-20% від загальної суми замовлення</div>
+            {% else %}
+                <div style="float: right; font-weight: bolder; margin-left: 80px; margin-right: 38px;">{{ total_products_price }}</div>
+            {% endif %}
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+    <hr>
+    <h2>Дані про замовника</h2>
+    {% for k, v in dict_user_info.items %}
+        <p>{{ k }}{{ v }}</p>
+    {% endfor %}
+    <h2>Автомобілі замовника</h2>
+    {% for i in users_cars %}
+        {% for k, v in i.items %}
+            <p>{{ k }}{{ v }}</p>
+        {% endfor %}
+        <hr>
+    {% endfor %}
+
+    <h2>Дані про замовлення</h2>
+    {% for k, v in orders_info.items %}
+        <p>{{ k }}{{ v }}</p>
+    {% endfor %}
+{% endif %}
+
+

@@ -1,3 +1,4 @@
+from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import check_password
@@ -16,7 +17,7 @@ from .forms import CustomAuthForm
 from .models import Profile, Cars, Order
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
-from .forms import CustomAuthForm, RegisterForm, UpdateUserForm, UserImageForm, CarImageForm, UpdatePasswordForm
+from .forms import CustomAuthForm, RegisterForm, UpdateUserForm, UserImageForm, CarImageForm
 from .decorators import anonymous_required
 from .token import token_generator
 
@@ -80,11 +81,10 @@ def reset_password(request):
                         'user': user,
                         'domain': current_site.domain,
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                        'token': token_generator.make_token(user),
-                        'protocol': 'https'
+                        'token': default_token_generator.make_token(user),
+                        'protocol': 'http'
                     }
                 )
-
                 # send_mail(subject, message, 'kobra1903@ukr.net', ['test-ykf0q4akt@srv1.mail-tester.com'], html_message=message, fail_silently=True)
 
                 user.email_user(subject, message, html_message=message)
@@ -262,7 +262,7 @@ class ActivateView(RedirectView):
         if user is not None and token_generator.check_token(user, token):
             user.is_active = True
             user.save()
-            messages.success(request, f'{user}, ваш аккаунт зареєстрований, виконайте будь-ласка вхід')
+            messages.success(request, f'{user.first_name}, ваш аккаунт зареєстрований, виконайте будь-ласка вхід')
             return super().get(request, uidb64, token)
         else:
 
