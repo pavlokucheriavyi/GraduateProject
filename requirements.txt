@@ -35,3 +35,4 @@ django-phonenumbers==1.0.1
 django-simple-captcha==0.5.17
 django-sendgrid-v5==1.2.0
 django-crispy-forms==1.14.0
+twilio==7.9.3

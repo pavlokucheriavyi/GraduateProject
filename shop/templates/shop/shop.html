@@ -3,131 +3,126 @@
 {% block content %}
     {% if messages %}
         {% for mess in messages %}
-                <div class="alert alert-success my_success" role="alert">{{mess}}</div>
+            <div class="alert alert-success my_success" role="alert">{{ mess }}</div>
         {% endfor %}
     {% endif %}
-<div class="container mt-5">
-      <div class="row">
-        <div class="col-md-8">
-        <div class="search-form">
-            <form action="" method="POST" id="SearchForm">
-                {% csrf_token %}
-                {{ form.search }}
-                <input type="Submit" class="btn btn-outline-warning search-button" name="submit" value="Пошук"/>
-            </form>
-        </div>
-<div class="shop_wrapper">
-<p class="Loader">Завантаження...</p>
-{% for item in products_list %}
-   <div class="shop_link"><a class="shop_url" href="{% url 'product_detail' item.id %}"><img class="shopimg" src="/{{ item.image }}"><p class="otstup">{{ item.title }}</p></a>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="search-form">
+                    <form action="" method="POST" id="SearchForm">
+                        {% csrf_token %}
+                        {{ form.search }}
+                        <input type="Submit" class="btn btn-outline-warning search-button" name="submit" value="Пошук"/>
+                    </form>
+                </div>
+                <div class="shop_wrapper">
+                    <p class="Loader">Завантаження...</p>
+                    {% for item in products_list %}
+                        <div class="shop_link"><a class="shop_url" href="{% url 'product_detail' item.id %}"><img
+                                class="shopimg" src="/{{ item.image }}">
+                            <p class="otstup">{{ item.title }}</p></a>
+                            <div class="time_block">
+                            <hr>
+                            <p class="otstup"> Ціна: {{ item.price }} грн</p>
+                            <a href="{% url 'product_detail' item.id %}"><img
+                                    src="{% static 'shop/final_cart_icon.png' %}" class="w-100 icon_cart" alt="..."></a>
+                            </div>
+                        </div>
 
-       <p class="otstup"> Ціна: {{ item.price }} грн</p>
-    <a href="{% url 'product_detail' item.id %}"><img src="{% static 'shop/final_cart_icon.png' %}" class="w-100 icon_cart" alt="..."></a>
-   </div>
+                    {% endfor %}
+                </div>
+                <div class="paginbutt">
+                    {% if is_paginated %}
+                        {% if page_obj.has_previous %}
+                            <a href="{% url 'shop' %}" class="btn btn-outline-warning">1</a>
+                            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-warning"> < </a>
+                        {% endif %}
 
-{% endfor %}
-</div>
-            <div class="paginbutt">
-            {% if is_paginated %}
-                {% if page_obj.has_previous %}
-                <a href="{% url 'shop' %}" class="btn btn-outline-warning">1</a>
-                  <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-warning"> < </a>
-                {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if num == page_obj.number %}
+                                <button class="btn btn-warning">{{ num }}</button>
+                            {% endif %}
+                        {% endfor %}
 
-                {% for num in page_obj.paginator.page_range %}
-                    {% if num == page_obj.number %}
-                        <button class="btn btn-warning">{{ num }}</button>
+                        {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-warning"> > </a>
+                            <a href="?page={{ page_obj.paginator.num_pages }}"
+                               class="btn btn-outline-warning">{{ page_obj.paginator.num_pages }}</a>
+                        {% endif %}
                     {% endif %}
-                {% endfor %}
+                </div>
+            </div>
 
-                {% if page_obj.has_next %}
-                  <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-warning"> > </a>
-                  <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline-warning">{{ page_obj.paginator.num_pages }}</a>
-                {% endif %}
-            {% endif %}
+            <div class="col-md-4">
+                <div class="categories">
+                    <form id="CartForm" action="" method="post" class="filters">
+                        {% csrf_token %}
+                        <h3 style="text-align: center">Категорії</h3>
+                        <hr>
+                        <ul>
+                            {% for item in category_list %}
+                                <li>
+                                    <button id="vitya" type="Submit" name="category" value="{{ item.category }}"
+                                            class="btn btn-link mylink">{{ item.category }}
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </form>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                    <script>
+                        $(".Loader").hide()
+                        const form = document.querySelector('#CartForm');
+                        const valueButtons = form.querySelectorAll('button');
+
+                        valueButtons.forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                e.preventDefault();
+
+                                $.ajax({
+                                    data: {
+                                        'cat': button.value,
+                                        'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val(),
+                                        'click': 'click'
+                                    },
+                                    type: 'POST',
+                                    url: "/filter-data",
+                                    beforeSend: function () {
+                                        $(".Loader").show()
+                                    },
+                                    success: function (response) {
+                                        $(".shop_wrapper").html(response.data);
+                                        $(".Loader").hide();
+                                        $(".paginbutt").hide();
+                                    }
+                                });
+                            });
+                        });
+
+
+                        $(document).ready(function () {
+                            $('#SearchForm').submit(function () {
+                                $.ajax({
+                                    data: $(this).serialize(),
+                                    type: $(this).attr('method'),
+                                    url: "{% url 'shop' %}",
+                                    beforeSend: function () {
+                                        $(".Loader").show()
+                                    },
+                                    success: function (response) {
+                                        $(".shop_wrapper").html(response.data);
+                                    }
+                                })
+                                return false;
+                            })
+                        })
+
+                    </script>
+                </div>
             </div>
         </div>
-
-          <div class="col-md-4">
-          <div class="categories">
-          <form id="CartForm" action="" method="post" class="filters">
-            {% csrf_token %}
-          <h3 style="text-align: center">Категорії</h3>
-          <hr>
-              <ul>
-                <li>
-            <button id="vitya" type="Submit" name="category" value="Масло" class="btn btn-link mylink">Масло</button>
-                </li>
-                <li>
-            <button type="Submit" name="category" value="Гвозди" class="btn btn-link mylink">Гвозди</button>
-
-                </li>
-                <li>
-                    <a href="{% url 'shop' %}">
-            <button type="Submit" name="category" value="Болты" class="btn btn-link mylink">Болты</button>
-                    </a>
-                </li>
-              <li>
-                  <a href="{% url 'shop' %}">
-            <button type="Submit" name="category" value="Гайки" class="btn btn-link mylink">Гайки</button>
-                    </a>
-              </li>
-             <li>
-                 <a href="{% url 'shop' %}">
-            <button type="Submit" name="category" value="Подшипники" class="btn btn-link mylink">Подшипники</button>
-                    </a>
-             </li>
-              </ul>
-          </form>
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-           $(".Loader").hide()
-           const form =  document.querySelector('#CartForm');
-           const valueButtons = form.querySelectorAll('button');
-
-           valueButtons.forEach(button => {
-              button.addEventListener('click', (e) => {
-                  e.preventDefault();
-
-                  $.ajax({
-                   data: {'cat': button.value, 'csrfmiddlewaretoken':$('[name=csrfmiddlewaretoken]').val(), 'click': 'click'},
-                   type: 'POST',
-                   url: "/filter-data",
-                   beforeSend: function (){
-                       $(".Loader").show()
-                   },
-                   success: function(response){
-                       $(".shop_wrapper").html(response.data);
-                       $(".Loader").hide();
-                       $(".paginbutt").hide();
-                   }
-               });
-              });
-           });
-
-
-           $(document).ready(function () {
-           $('#SearchForm').submit(function () {
-               $.ajax({
-                   data: $(this).serialize(),
-                   type: $(this).attr('method'),
-                   url: "{% url 'shop' %}",
-                   beforeSend: function () {
-                       $(".Loader").show()
-                   },
-                   success: function(response) {
-                       $(".shop_wrapper").html(response.data);
-                   }
-               })
-               return false;
-           })
-           })
-
-    </script>
-          </div>
-          </div>
-      </div>
-</div>
+    </div>
 
 {% endblock %}
 

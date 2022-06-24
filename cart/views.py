@@ -252,6 +252,7 @@ def cart_detail(request):
     id_of_current_user = 'None'
     export_email = ''
 
+
     if request.user.is_authenticated:
         id_of_current_user = request.user.id
         get_object_user = Profile.objects.get(user_id=id_of_current_user)
@@ -283,9 +284,7 @@ def test_view(request, *args, **kwargs):
     x = kwargs['kwargs']
     total_products_price = cart.get_total_price()
 
-
     flag = None
-
 
     # export all data to html mail
     dict_user_info = is_user_buy_products(request, x['email'][0])
@@ -298,7 +297,6 @@ def test_view(request, *args, **kwargs):
     if request.user.is_authenticated:
         id_of_current_user = request.user.id
         get_object_user = Profile.objects.get(user_id=id_of_current_user)
-
 
         new_or_not = get_object_user.is_new_user
         if new_or_not:
@@ -398,3 +396,6 @@ def parse_dict(my_dict):
             final_dict['Коментар до замовлення: '] = v[0]
 
     return final_dict
+
+
+

@@ -4,9 +4,11 @@ from django.core import serializers
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render, redirect, reverse
-from .models import Products, AvailableMarks
+from .models import Products, AvailableMarks, Category
 from users.models import Order, TypeOfRepair, Cars
 from django.utils import timezone
+from twilio.rest import Client
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -34,13 +36,15 @@ class ProductsView(ListView):
     model = Products
     template_name = 'shop/shop.html'
     context_object_name = 'products_list'
-    paginate_by = 8
+    paginate_by = 6
     ordering = ['-date']
 
     def get_context_data(self, **kwargs):
         form = SearchForm(self.request.POST or None)
         ctx = super(ProductsView, self).get_context_data(**kwargs)
+        category_list = Category.objects.all()
 
+        ctx['category_list'] = category_list
         ctx['form'] = form
         return ctx
 
@@ -149,7 +153,6 @@ def repair(request, type_name):
     # открываем json с доступными марками
     f = open('shop/is_available.json')
     data = json.load(f)
-    print(data)
 
     all_types_of_repair = TypeOfRepair.objects.all()
     for i in all_types_of_repair:
@@ -170,9 +173,26 @@ def repair(request, type_name):
             user_object = User.objects.get(id=current_user_id)
             user_surname = user_object.last_name
             user_name = user_object.first_name
+            user_email = user_object.email
+
 
             is_available_object = AvailableMarks.objects.get(name=is_available_mark)
             if is_available_object.is_available:
+
+                dict_for_whatsapp_bot = {'Статус користувача: ': 'Авторизований',
+                                         'Логін: ': user_object.username,
+                                         'email: ': user_email,
+                                         'Імʼя: ': user_name,
+                                         'Прізвище: ': user_surname,
+                                         'Телефон: ': req_dict['phone_number'][0],
+                                         'Тип: ': type_object.type,
+                                         'Марка: ': req_dict['marka'][0],
+                                         'Модель: ': req_dict['model'][0],
+                                         'Рік авто: ': req_dict['year'][0]
+                                         }
+
+                message(request, dict_for_whatsapp_bot)
+
                 b = Order(user=user_object, first_name=user_name, last_name=user_surname,
                           phone_number=req_dict['phone_number'][0], type=type_object,
                           marka=req_dict['marka'][0], model=req_dict['model'][0], year_of_car=req_dict['year'][0])
@@ -182,6 +202,21 @@ def repair(request, type_name):
             user_object = User.objects.get(id=current_user_id)
             user_surname = user_object.last_name
             user_name = user_object.first_name
+            user_email = user_object.email
+
+            dict_for_whatsapp_bot = {'Статус користувача: ': 'Авторизований',
+                                     'Логін: ': user_object.username,
+                                     'email: ': user_email,
+                                     'Імʼя: ': user_name,
+                                     'Прізвище: ': last_name,
+                                     'Телефон: ': req_dict['phone_number'][0],
+                                     'Тип: ': type_object.type,
+                                     'Марка: ': req_dict['marka'][0],
+                                     'Модель: ': req_dict['model'][0],
+                                     'Рік авто: ': req_dict['year'][0]
+                                     }
+
+            message(request, dict_for_whatsapp_bot)
 
             b = Order(user=user_object, first_name=user_name, last_name=user_surname,
                       phone_number=req_dict['phone_number'][0], type=type_object,
@@ -191,12 +226,36 @@ def repair(request, type_name):
         elif not request.user.is_authenticated and req_dict['marka'][0] != '' and req_dict['marka'][0] in data:
             is_available_object = AvailableMarks.objects.get(name=is_available_mark)
             if is_available_object.is_available:
+                dict_for_whatsapp_bot = {'Статус користувача: ': 'Не авторизований',
+                                         'Імʼя: ': first_name,
+                                         'Прізвище: ': last_name,
+                                         'Телефон: ': req_dict['phone_number'][0],
+                                         'Тип: ': type_object.type,
+                                         'Марка: ': req_dict['marka'][0],
+                                         'Модель: ': req_dict['model'][0],
+                                         'Рік авто: ': req_dict['year'][0]
+                                         }
+
+                message(request, dict_for_whatsapp_bot)
+
                 b = Order(first_name=first_name, last_name=last_name, phone_number=req_dict['phone_number'][0],
                           type=type_object, marka=req_dict['marka'][0], model=req_dict['model'][0],
                           year_of_car=req_dict['year'][0])
                 b.save()
 
         elif not request.user.is_authenticated and (req_dict['marka'][0] == '' or req_dict['marka'][0] not in data):
+            dict_for_whatsapp_bot = {'Статус користувача: ': 'Не авторизований',
+                                     'Імʼя: ': first_name,
+                                     'Прізвище: ': last_name,
+                                     'Телефон: ': req_dict['phone_number'][0],
+                                     'Тип: ': type_object.type,
+                                     'Марка: ': req_dict['marka'][0],
+                                     'Модель: ': req_dict['model'][0],
+                                     'Рік авто: ': req_dict['year'][0]
+                                     }
+
+            message(request, dict_for_whatsapp_bot)
+
             b = Order(first_name=first_name, last_name=last_name, phone_number=req_dict['phone_number'][0],
                       type=type_object, marka=req_dict['marka'][0], model=req_dict['model'][0],
                       year_of_car=req_dict['year'][0])
@@ -237,3 +296,26 @@ def repair(request, type_name):
                       {'form': x, 'type_of_repair': type_name, 'types_of_repair_list': types_of_repair_list,
                        'My_json': json_dict, 'main_marka': main_marka, 'main_model': main_model,
                        'users_name': users_name, 'users_surname': users_surname})
+
+
+account_sid = 'ACba3baf85b063f2614c78765409b68bb8'
+auth_token = 'd0832b32d4e0c2e684f025ae503078b9'
+client = Client(account_sid, auth_token)
+
+
+@csrf_exempt
+def message(request, something):
+    print(something)
+    user = request.POST.get('From')
+    message = request.POST.get('Body')
+    export_string = 'У вас нове замовлення ремонту!\n ---------------------------------\n'
+
+    for k, v in something.items():
+        export_string = export_string + k + v + '\n'
+
+    client.messages.create(
+        from_='whatsapp:+14155238886',
+        body=export_string,
+        to='whatsapp:+380662196787'
+    )
+    return HttpResponse("halo")

@@ -249,7 +249,7 @@ h1 {
 
 .shop_wrapper {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   grid-gap: 2em;
   grid-auto-rows: 150px;
   grid-auto-rows: minmax(100px, auto);
@@ -458,7 +458,7 @@ h1 {
   vertical-align: middle !important;
   margin-bottom: 2px;
     margin-top: 2px;
-
+    float: bottom;
 }
 
 .link {
@@ -484,6 +484,12 @@ h1 {
   color: white;
   transition: .3s ease-in-out;
     border-radius: 1em;
+  display: flex;
+  flex-direction: column;
+    }
+
+.time_block {
+    margin-top: auto;
 }
 
 
@@ -512,7 +518,7 @@ h1 {
 .shopimg{
     display: block;
     margin: 0 auto;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 4;
   object-fit: cover;
   width: 100%;
   height: auto;
