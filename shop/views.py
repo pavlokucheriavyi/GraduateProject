@@ -15,7 +15,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib import messages
 from cart.forms import CartAddProductForm
-from .models import AvailableMarks
+from .models import AvailableMarks, PidMarks
 from users.models import TypeOfRepair
 from .cars_dict import cars
 
@@ -43,7 +43,11 @@ class ProductsView(ListView):
         form = SearchForm(self.request.POST or None)
         ctx = super(ProductsView, self).get_context_data(**kwargs)
         category_list = Category.objects.all()
+        pid_list = PidMarks.objects.all()
+        same_button = 'pid_butt'
 
+        ctx['same_button'] = same_button
+        ctx['pid_marks'] = pid_list
         ctx['category_list'] = category_list
         ctx['form'] = form
         return ctx
@@ -66,16 +70,122 @@ class ProductsView(ListView):
 
 
 def filter_data(request):
-    stuff = request.POST.get('cat')
-    tags = Products.objects.all().filter(category__category=stuff)
-    # код для сохранения данных из json в бд
-    # for k, v in cars['list'].items():
-    #     b2 = AvailableMarks(name=f'{k}', is_available=True)
-    #     b2.save()
-    #     print('good')
+    print(request.POST)
+    if 'pid_butt' in request.POST:
+        if 'category' in request.POST:
+            category = request.POST.get('category')
+            if category == 'Підшипники маточини (втулки)':
+                marka = request.POST.get('pid_butt')
+                b = Products.objects.filter(category__category='Підшипники маточини (втулки)')
+                empty_list = []
+                for item in b:
+                    if marka in item.description:
+                        empty_list.append(item)
 
-    html = render_to_string('shop/ajax/shop.html', {'data': tags})
-    return JsonResponse({'data': html})
+                if len(empty_list) == 0:
+                    return HttpResponse('Немає в наявності' + '*' + marka)
+                html = render_to_string('shop/ajax/shop.html', {'data': empty_list})
+                return JsonResponse({'data': html + '*' + marka + '*' + 'with_category'})
+            elif category == 'Комплекти зчеплення':
+                marka = request.POST.get('pid_butt')
+                b = Products.objects.filter(category__category='Комплекти зчеплення')
+                empty_list = []
+                for item in b:
+                    if marka in item.description:
+                        empty_list.append(item)
+
+                if len(empty_list) == 0:
+                    return HttpResponse('Немає в наявності' + '*' + marka)
+                flag = 'pid'
+                html = render_to_string('shop/ajax/shop.html', {'data': empty_list, 'marka': marka})
+                return JsonResponse({'data': html + '*' + marka + '*' + 'with_category'})
+            elif category == 'Тормозні диски ПЕРЕДНІ':
+                marka = request.POST.get('pid_butt')
+                b = Products.objects.filter(category__category='Тормозні диски ПЕРЕДНІ')
+                empty_list = []
+                for item in b:
+                    if marka in item.description:
+                        empty_list.append(item)
+
+                if len(empty_list) == 0:
+                    return HttpResponse('Немає в наявності' + '*' + marka)
+                html = render_to_string('shop/ajax/shop.html', {'data': empty_list})
+                return JsonResponse({'data': html + '*' + marka + '*' + 'with_category'})
+            elif category == 'Тормозні диски ЗАДНІ':
+                marka = request.POST.get('pid_butt')
+                b = Products.objects.filter(category__category='Тормозні диски ЗАДНІ')
+                empty_list = []
+                for item in b:
+                    if marka in item.description:
+                        empty_list.append(item)
+
+                if len(empty_list) == 0:
+                    return HttpResponse('Немає в наявності' + '*' + marka)
+                html = render_to_string('shop/ajax/shop.html', {'data': empty_list})
+                return JsonResponse({'data': html + '*' + marka + '*' + 'with_category'})
+            elif category == 'Склоочисники':
+                marka = request.POST.get('pid_butt')
+                b = Products.objects.filter(category__category='Склоочисники')
+                empty_list = []
+                for item in b:
+                    if marka in item.description:
+                        empty_list.append(item)
+
+                if len(empty_list) == 0:
+                    return HttpResponse('Немає в наявності' + '*' + marka)
+                flag = 'pid'
+                html = render_to_string('shop/ajax/shop.html', {'data': empty_list, 'marka': marka})
+                return JsonResponse({'data': html + '*' + marka + '*' + 'with_category'})
+            elif category == 'Гальмові колодки':
+                marka = request.POST.get('pid_butt')
+                b = Products.objects.filter(category__category='Гальмові колодки')
+                empty_list = []
+                for item in b:
+                    if marka in item.description:
+                        empty_list.append(item)
+
+                if len(empty_list) == 0:
+                    return HttpResponse('Немає в наявності' + '*' + marka)
+                flag = 'pid'
+                html = render_to_string('shop/ajax/shop.html', {'data': empty_list, 'marka': marka})
+                return JsonResponse({'data': html + '*' + marka + '*' + 'with_category'})
+            elif category == 'Важелі підвіски':
+                marka = request.POST.get('pid_butt')
+                b = Products.objects.filter(category__category='Важелі підвіски')
+                empty_list = []
+                for item in b:
+                    if marka in item.description:
+                        empty_list.append(item)
+
+                if len(empty_list) == 0:
+                    return HttpResponse('Немає в наявності' + '*' + marka)
+                flag = 'pid'
+                html = render_to_string('shop/ajax/shop.html', {'data': empty_list, 'marka': marka})
+                return JsonResponse({'data': html + '*' + marka + '*' + 'with_category'})
+        else:
+            marka = request.POST.get('pid_butt')
+            b = Products.objects.all()
+            empty_list = []
+            for item in b:
+                if marka in item.description:
+                    empty_list.append(item)
+
+            if len(empty_list) == 0:
+                return HttpResponse('Немає в наявності')
+            flag = 'pid'
+            html = render_to_string('shop/ajax/shop.html', {'data': empty_list, 'flag': flag})
+            return JsonResponse({'data': html + '*' + marka})
+    else:
+        stuff = request.POST.get('cat')
+        tags = Products.objects.all().filter(category__category=stuff).order_by('-date')
+        # код для сохранения данных из json в бд
+        # for k, v in cars['list'].items():
+        #     b2 = AvailableMarks(name=f'{k}', is_available=True)
+        #     b2.save()
+        #     print('good')
+
+        html = render_to_string('shop/ajax/shop.html', {'data': tags})
+        return JsonResponse({'data': html + '*' + stuff})
 
 
 class UpdateProductView(UserPassesTestMixin, UpdateView):
@@ -175,10 +285,8 @@ def repair(request, type_name):
             user_name = user_object.first_name
             user_email = user_object.email
 
-
             is_available_object = AvailableMarks.objects.get(name=is_available_mark)
             if is_available_object.is_available:
-
                 dict_for_whatsapp_bot = {'Статус користувача: ': 'Авторизований',
                                          'Логін: ': user_object.username,
                                          'email: ': user_email,

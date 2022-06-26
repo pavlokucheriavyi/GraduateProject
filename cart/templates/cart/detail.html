@@ -1,4 +1,7 @@
 {% extends "shop/base.html" %}
+{% block header %}
+<title>Корзина</title>
+{% endblock %}
 {% block content %}
 {% if cart|length == 0 %}
 <h2 style="margin-top: 75px; margin-left: 80px;">Ваша корзина порожня</h2>

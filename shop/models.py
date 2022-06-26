@@ -46,3 +46,16 @@ class AvailableMarks(models.Model):
         verbose_name = 'Available Mark'
         verbose_name_plural = 'Available Marks'
         ordering = ['name']
+
+
+class PidMarks(models.Model):
+    name = models.CharField(max_length=50, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Марка для підшипників'
+        verbose_name_plural = 'Марки для підшипників'
+        ordering = ['name']
+

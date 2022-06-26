@@ -518,12 +518,19 @@ h1 {
 .shopimg{
     display: block;
     margin: 0 auto;
-    aspect-ratio: 4 / 4;
+    aspect-ratio: 4 / 3;
   object-fit: cover;
   width: 100%;
   height: auto;
     border-radius: 0.4em;
 }
+
+.pid_buttons {
+    padding-left: 20px;
+    padding-top: 35px;
+    padding-right: 35px;
+}
+
 
 .valik2{
     display: flex;

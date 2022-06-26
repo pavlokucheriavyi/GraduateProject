@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Products, AvailableMarks
+from .models import Category, Products, AvailableMarks, PidMarks
 from django.utils.safestring import mark_safe
 
 
@@ -33,4 +33,14 @@ class AvailableMarksAdmin(admin.ModelAdmin):
 
 
 admin.site.register(AvailableMarks, AvailableMarksAdmin)
+
+
 # Register your models here.
+
+class PidAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    list_display_links = ('name',)
+    search_fields = ('name',)
+
+
+admin.site.register(PidMarks, PidAdmin)

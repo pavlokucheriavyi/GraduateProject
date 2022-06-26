@@ -1,4 +1,7 @@
 {% extends "shop/base.html" %}
+{% block header %}
+<title>Магазин</title>
+{% endblock %}
 {% load static %}
 {% block content %}
     {% if messages %}
@@ -16,6 +19,19 @@
                         <input type="Submit" class="btn btn-outline-warning search-button" name="submit" value="Пошук"/>
                     </form>
                 </div>
+                <div class="flag">dsf</div>
+                <form id="pidForm" method="post">
+                    {% csrf_token %}
+                    <div class="pid_buttons">
+                        {% for i in pid_marks %}
+                            <button id="pid_id" type="Submit" name="pid_mark"
+                                    style="margin-left: 15px; margin-bottom: 15px;" value="{{ i.name }}"
+                                    class="btn btn-outline-info flag_button">{{ i.name }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                </form>
+                <div class="title_auto" style="font-size: 20px; font-weight: 500; padding-top: 25px; padding-left: 35px;">Diskach</div>
                 <div class="shop_wrapper">
                     <p class="Loader">Завантаження...</p>
                     {% for item in products_list %}
@@ -23,10 +39,10 @@
                                 class="shopimg" src="/{{ item.image }}">
                             <p class="otstup">{{ item.title }}</p></a>
                             <div class="time_block">
-                            <hr>
-                            <p class="otstup"> Ціна: {{ item.price }} грн</p>
-                            <a href="{% url 'product_detail' item.id %}"><img
-                                    src="{% static 'shop/final_cart_icon.png' %}" class="w-100 icon_cart" alt="..."></a>
+                                <hr>
+                                <p class="otstup"> Ціна: {{ item.price }} грн</p>
+                                <a href="{% url 'product_detail' item.id %}"><img
+                                        src="{% static 'shop/final_cart_icon.png' %}" class="w-100 icon_cart" alt="..."></a>
                             </div>
                         </div>
 
@@ -72,6 +88,9 @@
                     </form>
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                     <script>
+
+                        $(".title_auto").hide()
+                        $(".flag").hide()
                         $(".Loader").hide()
                         const form = document.querySelector('#CartForm');
                         const valueButtons = form.querySelectorAll('button');
@@ -92,7 +111,12 @@
                                         $(".Loader").show()
                                     },
                                     success: function (response) {
-                                        $(".shop_wrapper").html(response.data);
+                                        const myArray = response.data.split('*');
+                                        $(".shop_wrapper").html(myArray[0]);
+                                        console.log(myArray);
+                                        document.querySelector('.flag').value = myArray[1];
+                                        $('.title_auto').text(document.querySelector('.flag').value)
+                                        $(".title_auto").show();
                                         $(".Loader").hide();
                                         $(".paginbutt").hide();
                                     }
@@ -100,6 +124,53 @@
                             });
                         });
 
+
+                        const pidForm = document.querySelector('#pidForm');
+                        const allButtons = pidForm.querySelectorAll('button');
+
+
+                        allButtons.forEach(button => {
+                            button.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                $.ajax({
+
+                                    data: {
+                                        'pid_butt': button.value,
+                                        'csrfmiddlewaretoken': $('[name=csrfmiddlewaretoken]').val(),
+                                        'category': document.querySelector('.flag').value
+                                    },
+                                    method: "POST",
+                                    url: "/filter-data",
+                                    beforeSend: function () {
+                                        $(".Loader").show()
+                                    },
+                                    success: function (response) {
+                                        console.log(response[17])
+                                        if (response[17] === '*'){
+                                            let myArray = response.split('*')
+                                            $(".shop_wrapper").html(myArray[0]);
+                                            $(".paginbutt").hide();
+                                            $('.title_auto').text(document.querySelector('.flag').value + ' для ' + myArray[1])
+                                        } else {
+
+                                        console.log(response)
+                                        console.log(response.data)
+                                        let myArray = response.data.split('*')
+                                        $(".shop_wrapper").html(myArray[0]);
+                                        if (myArray.length > 2) {
+                                            $('.title_auto').text(document.querySelector('.flag').value + ' для ' + myArray[1])
+                                            $(".Loader").hide();
+                                            $(".paginbutt").hide();
+                                        } else {
+                                            $('.title_auto').text('Запчастини для ' + myArray[1]).show()
+                                            $(".paginbutt").hide();
+
+                                        }
+                                      }
+                                    }
+                                })
+                            })
+                        })
 
                         $(document).ready(function () {
                             $('#SearchForm').submit(function () {
