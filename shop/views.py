@@ -417,7 +417,7 @@ def message(request, something):
     user = request.POST.get('From')
     message = request.POST.get('Body')
     export_string = 'У вас нове замовлення ремонту!\n ---------------------------------\n'
-
+    print(user, 'say', message)
     for k, v in something.items():
         export_string = export_string + k + v + '\n'
 
