@@ -183,6 +183,7 @@
                                     },
                                     success: function (response) {
                                         $(".shop_wrapper").html(response.data);
+                                        $(".paginbutt").hide();
                                     }
                                 })
                                 return false;
