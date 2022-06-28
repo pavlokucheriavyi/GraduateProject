@@ -314,7 +314,7 @@ def test_view(request, *args, **kwargs):
 
     )
     # message = 'Bot'
-    send_mail(subject, message, from_email, ['kuchriavy10@gmail.com'], html_message=message,
+    send_mail(subject, message, from_email, ['kucheriavy10@icloud.com'], html_message=message,
               fail_silently=True)
 
 
