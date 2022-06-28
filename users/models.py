@@ -22,7 +22,7 @@ class PartsOrder(models.Model):
     )
     summa = models.CharField('Сума (грн)', max_length=15, default='')
     status = models.CharField('Статус', max_length=200, choices=sizes, default='Замовлення в процесі')
-    is_authenticated_user = models.CharField('id користувача або не зареєстрований(0). ПОЛЕ НЕ РЕДАГУВАТИ!!!', max_length=20, default="Не зареєстрований")
+    is_authenticated_user = models.CharField('id користувача або не зареєстрований(0)', max_length=20, default="Не зареєстрований")
     date_field = models.DateTimeField('Дата замовлення', default=timezone.now)
 
     def __str__(self):
