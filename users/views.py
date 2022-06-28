@@ -159,9 +159,11 @@ def profile(request):
             full_name = Profile.objects.get(user_id=request.user.id)
             full_name.first_name = req_dict['first_name'][0]
             full_name.last_name = req_dict['last_name'][0]
+            full_name.email = req_dict['email'][0]
             full_name.save()
             user_image_form = UserImageForm(request.POST, request.FILES, instance=request.user.profile)
             update_user_form = UpdateUserForm(request.POST, instance=request.user)
+
 
             if user_image_form.is_valid() and update_user_form.is_valid():
                 user_image_form.save()

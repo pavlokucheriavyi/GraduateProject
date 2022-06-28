@@ -21,7 +21,6 @@ from django.core.mail import send_mail, BadHeaderError
 @require_POST
 def cart_add(request, product_id):
     cart = Cart(request)
-    print(request.POST)
     # really_dict_request = dict()
     # for k, v in dict(request.POST).items():
     #     really_dict_request[k] = v[-1]
@@ -90,7 +89,6 @@ def cart_remove(request, product_id):
 
 def take_order(request):
     if request.POST:
-        print(request.POST)
         form = CaptchaTestForm(request.POST)
         req_dict = dict(request.POST)
         if 'MyValue' in req_dict:
@@ -103,6 +101,8 @@ def take_order(request):
             if form.is_valid() and int(req_dict['delivery_method_id'][0]) == 1:
                 html = "HUMAN-"
                 order_str = ''
+                mail_str = ''
+                mail_list = []
                 cart = Cart(request)
                 total_sum = float(cart.get_total_price()) * 0.8 if req_dict['is_authenticated'][
                                                                        0] != 'None' else cart.get_total_price()
@@ -128,6 +128,13 @@ def take_order(request):
                         i['quantity']) + ';\n     ' + 'Ціна за 1 штуку: ' + str(
                         i['price']) + ' грн;\n     ' + 'Загальна ціна: ' + i[
                                     'total_price'] + ' грн;\n     ' + '-----------------------------------------------------------' + '\n'
+                    mail_str = mail_str + f'{num}) ' + 'Продукт: ' + i[
+                        'product'].title + ';     ' + 'Кількість: ' + str(
+                        i['quantity']) + ';     ' + 'Ціна за 1 штуку: ' + str(
+                        i['price']) + ' грн;     ' + 'Загальна ціна: ' + i[
+                                   'total_price'] + ' грн;     '
+                    mail_list.append(mail_str)
+                    mail_str = ''
 
                 # check is user authenticated
                 get_user_id = req_dict['is_authenticated'][0]
@@ -141,14 +148,15 @@ def take_order(request):
                 if req_dict['comment_to_order'][0] == '':
                     export_comment = '---------------------------'
 
-                # vars to send mail info
-                test_view(request, kwargs=req_dict)
+
                 b = PartsOrder(name=req_dict['full_name'][0], email=req_dict['email'][0],
                                phone_number=req_dict['phone_number'][0],
                                comment=export_comment,
                                is_authenticated_user=export_info_about_id,
                                composition_order=order_str, summa=export_total_sum)
                 b.save()
+                # vars to send mail info
+                test_view(request, mail_list, export_total_sum, b.id, kwargs=req_dict)
                 # save data to UndefinedParts db
                 for item in cart:
                     part_object = UndefinedParts(id_order=b.id, name=req_dict['full_name'][0],
@@ -162,6 +170,8 @@ def take_order(request):
             elif form.is_valid() and int(req_dict['delivery_method_id'][0]) == 9:
                 html = "HUMAN-"
                 order_str = ''
+                mail_str = ''
+                mail_list = []
                 cart = Cart(request)
                 total_sum = float(cart.get_total_price()) * 0.8 if req_dict['is_authenticated'][
                                                                        0] != 'None' else cart.get_total_price()
@@ -186,6 +196,13 @@ def take_order(request):
                         i['quantity']) + ';\n     ' + 'Ціна за 1 штуку: ' + str(
                         i['price']) + ' грн;\n     ' + 'Загальна ціна: ' + i[
                                     'total_price'] + ' грн;\n     ' + '-----------------------------------------------------------' + '\n'
+                    mail_str = mail_str + f'{num}) ' + 'Продукт: ' + i[
+                        'product'].title + ';     ' + 'Кількість: ' + str(
+                        i['quantity']) + ';     ' + 'Ціна за 1 штуку: ' + str(
+                        i['price']) + ' грн;     ' + 'Загальна ціна: ' + i[
+                                   'total_price'] + ' грн;     '
+                    mail_list.append(mail_str)
+                    mail_str = ''
 
                 # check is user authenticated
                 get_user_id = req_dict['is_authenticated'][0]
@@ -199,8 +216,7 @@ def take_order(request):
                 if req_dict['comment_to_order'][0] == '':
                     export_comment = '---------------------------'
 
-                # vars to send mail info
-                test_view(request, kwargs=req_dict)
+
                 b = PartsOrder(name=req_dict['full_name'][0], email=req_dict['email'][0],
                                phone_number=req_dict['phone_number'][0],
                                address_city=req_dict['address_order_city'][0],
@@ -209,7 +225,8 @@ def take_order(request):
                                is_authenticated_user=export_info_about_id,
                                composition_order=order_str, summa=export_total_sum)
                 b.save()
-
+                # vars to send mail info
+                test_view(request, mail_list, export_total_sum, b.id, kwargs=req_dict)
                 # save data to UndefinedParts db
                 for item in cart:
                     part_object = UndefinedParts(id_order=b.id, name=req_dict['full_name'][0],
@@ -252,7 +269,6 @@ def cart_detail(request):
     id_of_current_user = 'None'
     export_email = ''
 
-
     if request.user.is_authenticated:
         id_of_current_user = request.user.id
         get_object_user = Profile.objects.get(user_id=id_of_current_user)
@@ -275,13 +291,14 @@ def cart_delete_all(request):
     return render(request, 'cart/detail.html')
 
 
-def test_view(request, *args, **kwargs):
+def test_view(request, mail_list, export_total_sum, id_order, **kwargs):
     cart = Cart(request)
     # send_cart_mail(request, req_dict)
     # final_list = []
     # for k, v in kwargs['kwargs'].items():
     #     final_list.append(v[0])
     x = kwargs['kwargs']
+    print(mail_list)
     total_products_price = cart.get_total_price()
 
     flag = None
@@ -290,7 +307,7 @@ def test_view(request, *args, **kwargs):
     dict_user_info = is_user_buy_products(request, x['email'][0])
     users_cars = get_users_cars(request)
     orders_info = parse_dict(x)
-    print(users_cars)
+
     # dict_user_info.update(users_cars)
     # dict_user_info.update(orders_info)
 
@@ -309,7 +326,9 @@ def test_view(request, *args, **kwargs):
         'cart/test.html',
         {'cart': cart, 'total_products_price': total_products_price,
          'flag': flag, 'domain': current_site.domain, 'protocol': 'http',
-         'dict_user_info': dict_user_info, 'users_cars': users_cars, 'orders_info': orders_info
+         'dict_user_info': dict_user_info, 'users_cars': users_cars, 'orders_info': orders_info,
+         'mail_list': mail_list, 'total_sum': total_products_price, 'id_order': id_order
+
          }
 
     )
@@ -396,6 +415,3 @@ def parse_dict(my_dict):
             final_dict['Коментар до замовлення: '] = v[0]
 
     return final_dict
-
-
-

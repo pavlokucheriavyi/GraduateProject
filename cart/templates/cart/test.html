@@ -1,6 +1,14 @@
 
-
-
+    <p>Номер замовлення: {{ id_order }}</p>
+    {% for i in mail_list %}
+        <p>{{ i }}</p>
+    {% endfor %}
+    {% if flag %}
+    <p>Загальна сума: {{ total_sum }}</p>
+    <p style="color: green;">-20% для першого замовлення</p>
+    {% else %}
+        <p>Загальна сума: {{ total_sum }}</p>
+    {% endif %}
     <hr>
     <h2>Дані про замовника</h2>
     {% for k, v in dict_user_info.items %}
