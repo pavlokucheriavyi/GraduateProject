@@ -1,4 +1,5 @@
 import json
+from django.conf import settings
 from django.http import HttpResponse
 from django.core import serializers
 from django.http import JsonResponse
@@ -6,6 +7,7 @@ from django.template.loader import render_to_string
 from django.shortcuts import render, redirect, reverse
 from .models import Products, AvailableMarks, Category
 from users.models import Order, TypeOfRepair, Cars
+from kolischa import local_settings
 from django.utils import timezone
 from twilio.rest import Client
 from django.views.decorators.csrf import csrf_exempt
@@ -408,9 +410,7 @@ def repair(request, type_name):
                        'users_name': users_name, 'users_surname': users_surname})
 
 
-account_sid = 'ACba3baf85b063f2614c78765409b68bb8'
-auth_token = 'dbf9e712beec02c654dc0ed652509d01'
-client = Client(account_sid, auth_token)
+client = Client(local_settings.account_sid, local_settings.auth_token)
 
 
 @csrf_exempt
