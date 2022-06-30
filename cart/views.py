@@ -332,7 +332,7 @@ def test_view(request, mail_list, export_total_sum, id_order, **kwargs):
          }
 
     )
-    # message = 'Bot'
+    print('work')
     send_mail(subject, message, from_email, ['kucheriavy10@icloud.com'], html_message=message,
               fail_silently=True)
 

@@ -67,6 +67,7 @@ def login(request):
 
 @anonymous_required(redirect_url='home')
 def reset_password(request):
+    print('WORK')
     if request.method == 'POST':
         password_reset_form = PasswordResetForm(request.POST)
         if password_reset_form.is_valid():
