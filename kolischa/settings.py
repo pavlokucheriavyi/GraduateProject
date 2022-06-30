@@ -128,15 +128,6 @@ try:
 except ModuleNotFoundError:
     from .prod_settings import *
 
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_BACKEND = 'sendgrid_backend.SendgridBackend'
-SENDGRID_API_KEY = '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'
-SENDGRID_SANDBOX_MODE_IN_DEBUG = False
-SENDGRID_ECHO_TO_STDOUT = True
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'kobra1903@ukr.net'
-EMAIL_USE_TLS = True
 
 
 CRISPY_TEMPLATE_PACK = 'uni_form'
