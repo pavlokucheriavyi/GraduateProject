@@ -28,27 +28,7 @@ class PartsOrder(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        if self.status == 'Користувач забрав товар':
-            un_parts = UndefinedParts.objects.filter(id_order=self.id)
-            for i in un_parts:
-                i.delete()
-            if self.is_authenticated_user != '0':
-                get_user = Profile.objects.get(user_id=int(self.is_authenticated_user))
-                get_user.is_new_user = False
-                get_user.save()
 
-        elif self.status == 'Користувач не розрахувався':
-            un_parts = UndefinedParts.objects.filter(id_order=self.id)
-            for item in un_parts:
-                try:
-                    product_object = Products.objects.get(id=item.id_of_product)
-                    product_object.count += item.count_product
-                    product_object.save()
-                    item.delete()
-                except Products.DoesNotExist:
-                    item.delete()
-        return super(PartsOrder, self).save()
 
     class Meta:
         verbose_name = 'Замовлення запчастин'

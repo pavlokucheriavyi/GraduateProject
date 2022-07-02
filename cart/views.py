@@ -143,11 +143,17 @@ def take_order(request):
                 else:
                     export_info_about_id = get_user_id
 
+                #  edit is_new_user in Profile table
+                if export_info_about_id != '0':
+                    b = Profile.objects.get(user_id=int(export_info_about_id))
+                    if b.is_new_user:
+                        b.is_new_user = False
+                        b.save()
+
                 export_comment = req_dict['comment_to_order'][0]
                 # edit comment if comment == empty string
                 if req_dict['comment_to_order'][0] == '':
                     export_comment = '---------------------------'
-
 
                 b = PartsOrder(name=req_dict['full_name'][0], email=req_dict['email'][0],
                                phone_number=req_dict['phone_number'][0],
@@ -211,11 +217,17 @@ def take_order(request):
                 else:
                     export_info_about_id = get_user_id
 
+                #  edit is_new_user in Profile table
+                if export_info_about_id != '0':
+                    b = Profile.objects.get(user_id=int(export_info_about_id))
+                    if b.is_new_user:
+                        b.is_new_user = False
+                        b.save()
+
                 export_comment = req_dict['comment_to_order'][0]
                 # edit comment if comment == empty string
                 if req_dict['comment_to_order'][0] == '':
                     export_comment = '---------------------------'
-
 
                 b = PartsOrder(name=req_dict['full_name'][0], email=req_dict['email'][0],
                                phone_number=req_dict['phone_number'][0],
