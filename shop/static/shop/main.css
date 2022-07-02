@@ -531,6 +531,11 @@ h1 {
     padding-right: 35px;
 }
 
+.box div {
+    display: inline-block;
+
+}
+
 
 .valik2{
     display: flex;

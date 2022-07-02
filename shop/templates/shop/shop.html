@@ -1,6 +1,6 @@
 {% extends "shop/base.html" %}
 {% block header %}
-<title>Магазин</title>
+    <title>Магазин</title>
 {% endblock %}
 {% load static %}
 {% block content %}
@@ -31,7 +31,14 @@
                         {% endfor %}
                     </div>
                 </form>
-                <div class="title_auto" style="font-size: 20px; font-weight: 500; padding-top: 25px; padding-left: 35px;">Diskach</div>
+                <div class="container">
+                    <div class="box" style="white-space: nowrap;">
+                        <div class="title_auto"
+                             style="font-size: 20px; font-weight: 500; padding-top: 25px; padding-left: 10px;">Diskach
+                        </div>
+                        <div class="cancel_filter" style="float: right; margin-right: 30px; margin-top: 22px;"><a href="{% url 'shop' %}" style=" color: red;">відмінити фільтри</a></div>
+                    </div>
+                </div>
                 <div class="shop_wrapper">
                     <p class="Loader">Завантаження...</p>
                     {% for item in products_list %}
@@ -89,6 +96,7 @@
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                     <script>
 
+                        $(".cancel_filter").hide()
                         $(".title_auto").hide()
                         $(".flag").hide()
                         $(".Loader").hide()
@@ -117,6 +125,7 @@
                                         document.querySelector('.flag').value = myArray[1];
                                         $('.title_auto').text(document.querySelector('.flag').value)
                                         $(".title_auto").show();
+                                        $(".cancel_filter").show()
                                         $(".Loader").hide();
                                         $(".paginbutt").hide();
                                     }
@@ -146,27 +155,28 @@
                                     },
                                     success: function (response) {
                                         console.log(response[17])
-                                        if (response[17] === '*'){
+                                        if (response[17] === '*') {
                                             let myArray = response.split('*')
                                             $(".shop_wrapper").html(myArray[0]);
                                             $(".paginbutt").hide();
                                             $('.title_auto').text(document.querySelector('.flag').value + ' для ' + myArray[1])
                                         } else {
 
-                                        console.log(response)
-                                        console.log(response.data)
-                                        let myArray = response.data.split('*')
-                                        $(".shop_wrapper").html(myArray[0]);
-                                        if (myArray.length > 2) {
-                                            $('.title_auto').text(document.querySelector('.flag').value + ' для ' + myArray[1])
-                                            $(".Loader").hide();
-                                            $(".paginbutt").hide();
-                                        } else {
-                                            $('.title_auto').text('Запчастини для ' + myArray[1]).show()
-                                            $(".paginbutt").hide();
+                                            console.log(response)
+                                            console.log(response.data)
+                                            let myArray = response.data.split('*')
+                                            $(".shop_wrapper").html(myArray[0]);
+                                            if (myArray.length > 2) {
+                                                $('.title_auto').text(document.querySelector('.flag').value + ' для ' + myArray[1])
+                                                $(".Loader").hide();
+                                                $(".paginbutt").hide();
+                                            } else {
+                                                $('.title_auto').text('Запчастини для ' + myArray[1]).show()
+                                                $(".cancel_filter").show()
+                                                $(".paginbutt").hide();
 
+                                            }
                                         }
-                                      }
                                     }
                                 })
                             })
