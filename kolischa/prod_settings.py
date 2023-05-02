@@ -8,7 +8,7 @@ DEBUG = False
 
 CART_SESSION_ID = 'cart'
 
-ALLOWED_HOSTS = ['127.0.0.1', '134.209.251.106', 'mygraduateproject.herokuapp.com']
+ALLOWED_HOSTS = ['.vercel.app']
 
 DATABASES = {
     'default': {
