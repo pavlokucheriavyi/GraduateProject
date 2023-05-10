@@ -8,7 +8,7 @@ DEBUG = False
 
 CART_SESSION_ID = 'cart'
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['*']
 
 DATABASES = {
     'default': {
